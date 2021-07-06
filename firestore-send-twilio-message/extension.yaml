@@ -1,0 +1,143 @@
+name: firestore-send-twilio-message
+version: 0.1.0
+specVersion: v1beta
+
+displayName: Trigger Message with the Twilio API
+description: Sends a message using the Twilio API based on the contents of a document written to a specified Cloud Firestore collection.
+
+license: Apache-2.0
+
+sourceUrl: https://github.com/twilio-labs/twilio-firebase-extensions/tree/main/firestore-send-twilio-message
+releaseNotesUrl: https://github.com/firebase/extensions/blob/main/firestore-send-twilio-message/CHANGELOG.md
+
+author:
+  authorName: Twilio
+  url: https://www.twilio.com
+
+contributors:
+  - authorName: Phil Nash
+    email: philnash@twilio.com
+    url: https://philna.sh
+
+billingRequired: true
+
+roles:
+  - role: datastore.user
+    reason: Allows this extension to access Cloud Firestore to read and process added message documents.
+
+resources:
+  - name: processQueue
+    type: firebaseextensions.v1beta.function
+    description:
+      Processes document changes in the specified Cloud Firestore collection,
+      delivers messages, and updates the document with delivery status information.
+    properties:
+      location: ${param:LOCATION}
+      runtime: nodejs14
+      eventTrigger:
+        eventType: providers/cloud.firestore/eventTypes/document.write
+        resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:MESSAGE_COLLECTION}/{id}
+
+params:
+  - param: LOCATION
+    label: Cloud Functions location
+    description: >-
+      Where do you want to deploy the functions created for this extension?
+      You usually want a location close to your database. For help selecting a
+      location, refer to the [location selection
+      guide](https://firebase.google.com/docs/functions/locations).
+    type: select
+    options:
+      - label: Iowa (us-central1)
+        value: us-central1
+      - label: South Carolina (us-east1)
+        value: us-east1
+      - label: Northern Virginia (us-east4)
+        value: us-east4
+      - label: Warsaw (europe-central2)
+        value: europe-central2
+      - label: Los Angeles (us-west2)
+        value: us-west2
+      - label: Salt Lake City (us-west3)
+        value: us-west3
+      - label: Las Vegas (us-west4)
+        value: us-west4
+      - label: Warsaw (europe-central2)
+        value: europe-central2
+      - label: Belgium (europe-west1)
+        value: europe-west1
+      - label: London (europe-west2)
+        value: europe-west2
+      - label: Frankfurt (europe-west3)
+        value: europe-west3
+      - label: Zurich (europe-west6)
+        value: europe-west6
+      - label: Hong Kong (asia-east2)
+        value: asia-east2
+      - label: Tokyo (asia-northeast1)
+        value: asia-northeast1
+      - label: Osaka (asia-northeast2)
+        value: asia-northeast2
+      - label: Seoul (asia-northeast3)
+        value: asia-northeast3
+      - label: Mumbai (asia-south1)
+        value: asia-south1
+      - label: Jakarta (asia-southeast2)
+        value: asia-southeast2
+      - label: Montreal (northamerica-northeast1)
+        value: northamerica-northeast1
+      - label: Sao Paulo (southamerica-east1)
+        value: southamerica-east1
+      - label: Sydney (australia-southeast1)
+        value: australia-southeast1
+    default: us-central1
+    required: true
+    immutable: true
+
+  - param: TWILIO_ACCOUNT_SID
+    label: Twilio Account Sid
+    description: >-
+      Your Twilio Account Sid, which you can find in your Twilio console.
+    type: string
+    example: ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    validationRegex: ^AC[a-f0-9]{32}$
+    validationErrorMessage: Invalid Account Sid. Must be in the form `ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`.
+    required: true
+
+  - param: TWILIO_AUTH_TOKEN
+    label: Twilio Auth Token
+    description: >-
+      Your Twilio Auth Token, which you can find in your Twilio console.
+    type: string
+    example: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    validationRegex: ^[a-f0-9]{32}$
+    validationErrorMessage: Invalid Auth Token. Must be 32 characters long and made of letters and digits.
+    required: true
+
+  - param: TWILIO_PHONE_NUMBER
+    label: Twilio phone number
+    description: >-
+      A Twilio phone number you want to use to send messages. In e.164 format. If you provide a Messaging Service Sid as well, the messaging service will be preferred.
+    type: string
+    example: +15551231234
+    required: false
+
+  - param: TWILIO_MESSAGING_SERVICE_SID
+    label: Twilio Messaging Service Sid
+    description: >-
+      A Sid of a Twilio Messaging Service that you want to use to send messages. If you provide a Twilio phone number as well, the messaging service will be preferred.
+    example: MGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    type: string
+    validationRegex: ^MG[a-f0-9]{32}$
+    validationErrorMessage: Invalid Messaging Service Sid. Must be in the form `MGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`.
+    require: false
+
+  - param: MESSAGE_COLLECTION
+    label: Message documents collection
+    description: >-
+      What is the path to the collection that contains the documents used to build and send the messages?
+    type: string
+    default: messages
+    validationRegex: "^[^/]+(/[^/]+/[^/]+)*$"
+    validationErrorMessage: Must be a valid Cloud Firestore collection.
+    required: true

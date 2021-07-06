@@ -4,12 +4,27 @@
 This repository contains the source code for Firebase Extensions that enable communications with Twilio. To learn more about Firebase Extensions, including how to install them in your Firebase projects, visit the [Firebase documentation](https://firebase.google.com/docs/extensions).
 
 * [Available Extensions](#available-extensions)
+  * [Send Messages using Twilio](#send-messages-using-twilio)
+* [Running the extensions locally](#running-the-extensions-locally)
 * [Contributing](#contributing)
   * [Code of Conduct](#code-of-conduct)
 
 ## Available Extensions
 
-There are no extensions yet. This is a work in progress.
+### Send Messages using Twilio
+
+* [Source code](./firestore-send-twilio-message/)
+
+## Running the extensions locally
+
+* [Create a Firebase project](https://firebase.google.com/)
+* Clone the project
+* Install the dependencies: `npm install`
+* `cd` into the extension that you want to run
+* Copy the `.env.example` file: `cp .env.example .env`
+* Fill in the `.env` file with values from your Twilio account
+* Run the Firebase emulator: `npx firebase ext:dev:emulators:start --test-params .env --project YOUR_FIREBASE_PROJECT_ID`
+* Open the emulator in your browser at `localhost:4000`
 
 ## Contributing
 

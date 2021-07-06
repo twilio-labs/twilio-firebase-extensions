@@ -1,0 +1,36 @@
+{
+  "name": "twilio-firebase-extensions",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Repository of Twilio authored extensions for Firebase",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bootstrap": "lerna bootstrap",
+    "clean": "lerna run --parallel clean",
+    "build": "lerna run --parallel build",
+    "postinstall": "lerna bootstrap --no-ci && npm run clean && npm run build",
+    "generate-readmes": "lerna run --parallel generate-readme"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twilio-labs/twilio-firebase-extensions.git"
+  },
+  "keywords": [
+    "twilio",
+    "firebase"
+  ],
+  "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
+  "contributors": [
+    "Phil Nash <philnash@twilio.com> (https://philna.sh)"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/twilio-labs/twilio-firebase-extensions/issues"
+  },
+  "homepage": "https://github.com/twilio-labs/twilio-firebase-extensions#readme",
+  "devDependencies": {
+    "firebase-tools": "^9.14.0",
+    "lerna": "^4.0.0",
+    "typescript": "^4.3.5"
+  }
+}

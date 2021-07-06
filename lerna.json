@@ -1,0 +1,7 @@
+{
+  "packages": [
+    "*",
+    "firestore-send-twilio-message/functions"
+  ],
+  "version": "0.0.0"
+}
