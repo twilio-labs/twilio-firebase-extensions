@@ -26,6 +26,8 @@
 
 * **processQueue:** Processes document changes in the specified Cloud Firestore collection, delivers messages, and updates the document with delivery status information.
 
+* **statusCallback:** An HTTP triggered function that receives status callback webhooks from Twilio and updates the delivery status of a message document.
+
 
 
 **Access Required**:

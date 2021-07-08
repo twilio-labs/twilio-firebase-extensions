@@ -28,7 +28,7 @@ roles:
 resources:
   - name: processQueue
     type: firebaseextensions.v1beta.function
-    description:
+    description: >-
       Processes document changes in the specified Cloud Firestore collection,
       delivers messages, and updates the document with delivery status information.
     properties:
@@ -39,6 +39,9 @@ resources:
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:MESSAGE_COLLECTION}/{id}
   - name: statusCallback
     type: firebaseextensions.v1beta.function
+    description: >-
+      An HTTP triggered function that receives status callback webhooks from
+      Twilio and updates the delivery status of a message document.
     properties:
       location: ${param:LOCATION}
       runtime: nodejs14
