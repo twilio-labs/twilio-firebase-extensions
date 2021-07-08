@@ -27,8 +27,6 @@ export type QueuePayload = {
       messagingServiceSid?: string;
       numMedia?: string;
       numSegments?: string;
-      price?: string;
-      priceUnit?: string;
     };
   };
   to: string;

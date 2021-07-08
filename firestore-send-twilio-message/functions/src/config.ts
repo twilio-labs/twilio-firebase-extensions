@@ -5,4 +5,6 @@ export default {
     phoneNumber: process.env.TWILIO_PHONE_NUMBER,
     messagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID,
   },
+  location: process.env.LOCATION || 'us-central1',
+  projectId: process.env.PROJECT_ID
 };

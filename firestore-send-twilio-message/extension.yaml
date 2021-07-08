@@ -37,6 +37,12 @@ resources:
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:MESSAGE_COLLECTION}/{id}
+  - name: statusCallback
+    type: firebaseextensions.v1beta.function
+    properties:
+      location: ${param:LOCATION}
+      runtime: nodejs14
+      httpsTrigger: {}
 
 params:
   - param: LOCATION
