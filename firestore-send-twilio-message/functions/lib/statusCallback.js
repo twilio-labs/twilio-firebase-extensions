@@ -1,11 +1,33 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.statusCallback = void 0;
-const admin = require("firebase-admin");
-const functions = require("firebase-functions");
+const admin = __importStar(require("firebase-admin"));
+const functions = __importStar(require("firebase-functions"));
 const twilio_1 = require("twilio");
 const utils_1 = require("./utils");
-const config_1 = require("./config");
+const config_1 = __importDefault(require("./config"));
 const messageCollection = process.env.MESSAGE_COLLECTION || "messages";
 exports.statusCallback = functions.handler.https.onRequest(async (req, res) => {
     utils_1.initialize();
@@ -53,7 +75,7 @@ exports.statusCallback = functions.handler.https.onRequest(async (req, res) => {
         functions.logger.error(error);
     }
     res.contentType('text/xml');
-    res.send(new twilio_1.twiml.MessagingResponse().toString());
-    return;
+    return res.send(new twilio_1.twiml.MessagingResponse().toString());
+    ;
 });
 //# sourceMappingURL=statusCallback.js.map

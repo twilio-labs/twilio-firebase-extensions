@@ -8,7 +8,7 @@ async function deliverMessage(
   payload: QueuePayload,
   ref: admin.firestore.DocumentReference
 ): Promise<void> {
-  functions.logger.log(`Attempting delivery for message: ${ref.path}`);
+  // functions.logger.log(`Attempting delivery for message: ${ref.path}`);
   const update = {
     "delivery.endTime": admin.firestore.FieldValue.serverTimestamp(),
     "delivery.error": null,
@@ -25,13 +25,13 @@ async function deliverMessage(
       config.twilio.messagingServiceSid ||
       config.twilio.phoneNumber;
     const { to, body } = payload;
-    console.log(getFunctionsUrl("statusCallback"));
     const message = await twilioClient.messages.create({
       from,
       to,
       body,
       statusCallback: getFunctionsUrl("statusCallback")
     });
+    console.log(message);
     const info = {
       messageSid: message.sid,
       status: message.status,
@@ -51,15 +51,21 @@ async function deliverMessage(
     update["delivery.state"] = "SUCCESS";
     update["delivery.info"] = info;
     functions.logger.log(
-      `Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`
+      // `Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`
+      `Delivered message successfully`
     );
   } catch (error) {
     update["delivery.state"] = "ERROR";
-    update["delivery.errorCode"] = error.code;
-    update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
-    functions.logger.error(
-      `Error when delivering message: ${ref.path}: ${error.toString()}`
-    );
+    if (error.code) {
+      update["delivery.errorCode"] = error.code;
+      update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
+    } else {
+      update["delivery.errorMessage"] = error.message;
+    }
+    // functions.logger.error(
+    //   // `Error when delivering message: ${ref.path}: ${error.toString()}`
+    //   `Error when delivering message.`
+    // );
   }
 
   return admin.firestore().runTransaction((transaction) => {
@@ -95,6 +101,8 @@ function processCreate(
 async function processWrite(
   change: functions.Change<functions.firestore.DocumentSnapshot>
 ): Promise<void> {
+
+  // console.log(change.after);
   if (!change.after.exists) {
     // Document has been deleted, nothing to do here.
     return;

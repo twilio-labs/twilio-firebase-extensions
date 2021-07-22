@@ -1,12 +1,34 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processQueue = void 0;
-const admin = require("firebase-admin");
-const functions = require("firebase-functions");
-const config_1 = require("./config");
+const admin = __importStar(require("firebase-admin"));
+const functions = __importStar(require("firebase-functions"));
+const config_1 = __importDefault(require("./config"));
 const utils_1 = require("./utils");
 async function deliverMessage(payload, ref) {
-    functions.logger.log(`Attempting delivery for message: ${ref.path}`);
+    // functions.logger.log(`Attempting delivery for message: ${ref.path}`);
     const update = {
         "delivery.endTime": admin.firestore.FieldValue.serverTimestamp(),
         "delivery.error": null,
@@ -21,13 +43,13 @@ async function deliverMessage(payload, ref) {
             config_1.default.twilio.messagingServiceSid ||
             config_1.default.twilio.phoneNumber;
         const { to, body } = payload;
-        console.log(utils_1.getFunctionsUrl("statusCallback"));
         const message = await utils_1.twilioClient.messages.create({
             from,
             to,
             body,
             statusCallback: utils_1.getFunctionsUrl("statusCallback")
         });
+        console.log(message);
         const info = {
             messageSid: message.sid,
             status: message.status,
@@ -46,13 +68,23 @@ async function deliverMessage(payload, ref) {
         };
         update["delivery.state"] = "SUCCESS";
         update["delivery.info"] = info;
-        functions.logger.log(`Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`);
+        functions.logger.log(
+        // `Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`
+        `Delivered message successfully`);
     }
     catch (error) {
         update["delivery.state"] = "ERROR";
-        update["delivery.errorCode"] = error.code;
-        update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
-        functions.logger.error(`Error when delivering message: ${ref.path}: ${error.toString()}`);
+        if (error.code) {
+            update["delivery.errorCode"] = error.code;
+            update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
+        }
+        else {
+            update["delivery.errorMessage"] = error.message;
+        }
+        // functions.logger.error(
+        //   // `Error when delivering message: ${ref.path}: ${error.toString()}`
+        //   `Error when delivering message.`
+        // );
     }
     return admin.firestore().runTransaction((transaction) => {
         transaction.update(ref, update);
@@ -81,6 +113,7 @@ function processCreate(snapshot) {
 // This method is called by `processQueue` when a document is added to the
 // collection, updated, or deleted.
 async function processWrite(change) {
+    // console.log(change.after);
     if (!change.after.exists) {
         // Document has been deleted, nothing to do here.
         return;

@@ -4,8 +4,9 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "sourceMap": true,
-    "strict": true,
-    "target": "ES2020"
+    "strict": false,
+    "target": "ES2020",
+    "esModuleInterop": true
   },
   "compileOnSave": true,
   "exclude": ["node_modules"]

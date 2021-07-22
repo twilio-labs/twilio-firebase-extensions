@@ -4,7 +4,7 @@
   "private": true,
   "description": "Repository of Twilio authored extensions for Firebase",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "bootstrap": "lerna bootstrap",
     "clean": "lerna run --parallel clean",
     "build": "lerna run --parallel build",
@@ -29,8 +29,11 @@
   },
   "homepage": "https://github.com/twilio-labs/twilio-firebase-extensions#readme",
   "devDependencies": {
+    "@types/jest": "^26.0.24",
     "firebase-tools": "^9.14.0",
+    "jest": "^27.0.6",
     "lerna": "^4.0.0",
+    "ts-jest": "^27.0.3",
     "typescript": "^4.3.5"
   }
 }

@@ -51,6 +51,5 @@ export const statusCallback = functions.handler.https.onRequest(async (req, res)
     functions.logger.error(error);
   }
   res.contentType('text/xml');
-  res.send(new twiml.MessagingResponse().toString());
-  return;
+  return res.send(new twiml.MessagingResponse().toString());;
 });
