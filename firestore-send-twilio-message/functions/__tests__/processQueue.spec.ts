@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import functionsTestInit from "firebase-functions-test";
 
-import * as exportedFunctions from "../src";
+import { processQueue } from "../src/";
 
 const functionsTest = functionsTestInit();
 
@@ -46,11 +46,11 @@ describe("processing message queue", () => {
   });
 
   it("functions are exported", () => {
-    expect(exportedFunctions.processQueue).toBeInstanceOf(Function);
+    expect(processQueue).toBeInstanceOf(Function);
   });
 
   it("successfully invokes function and ignores delete", async () => {
-    const wrapped = functionsTest.wrap(exportedFunctions.processQueue);
+    const wrapped = functionsTest.wrap(processQueue);
     const change: functions.Change<functions.firestore.DocumentSnapshot> = {
       before: {
         id: "123",
@@ -75,7 +75,7 @@ describe("processing message queue", () => {
   });
 
   it("successfully invokes function and processes create", async () => {
-    const wrapped = functionsTest.wrap(exportedFunctions.processQueue);
+    const wrapped = functionsTest.wrap(processQueue);
     const change: functions.Change<functions.firestore.DocumentSnapshot> = {
       before: {
         id: "123",
@@ -109,7 +109,7 @@ describe("processing message queue", () => {
   });
 
   it("successfully invokes function and ignores update with finished status", async () => {
-    const wrapped = functionsTest.wrap(exportedFunctions.processQueue);
+    const wrapped = functionsTest.wrap(processQueue);
     const change: functions.Change<functions.firestore.DocumentSnapshot> = {
       before: {
         id: "123",
@@ -138,7 +138,7 @@ describe("processing message queue", () => {
   });
 
   xit("successfully invokes function and processes update in pending state", async () => {
-    const wrapped = functionsTest.wrap(exportedFunctions.processQueue);
+    const wrapped = functionsTest.wrap(processQueue);
     // This needs to be a real DocumentSnapshot with a real DocumentReference in
     // the `ref` fields so that the logging based on the `ref` in the function
     // works.
@@ -181,7 +181,7 @@ describe("processing message queue", () => {
   });
 
   xit("should send message and write update delivery status with success", async () => {
-    const wrapped = functionsTest.wrap(exportedFunctions.processQueue);
+    const wrapped = functionsTest.wrap(processQueue);
     const change: functions.Change<functions.firestore.DocumentSnapshot> = {
       before: {
         id: "123",

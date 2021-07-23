@@ -1,13 +1,17 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
 import { twiml, validateRequest } from "twilio";
-import { initialize, getFunctionsUrl } from "./utils";
+import { getFunctionsUrl } from "./utils";
 import config from "./config"
 
 const messageCollection = process.env.MESSAGE_COLLECTION || "messages";
 
+let initialized = false;
+
 export const statusCallback = functions.handler.https.onRequest(async (req, res) => {
-  initialize();
+  if (!initialized) {
+    admin.initializeApp();
+  }
   const { twilio: { authToken } } = config;
   const signature = req.get('x-twilio-signature');
   const url = getFunctionsUrl("statusCallback");
@@ -50,6 +54,6 @@ export const statusCallback = functions.handler.https.onRequest(async (req, res)
   } catch(error) {
     functions.logger.error(error);
   }
-  res.contentType('text/xml');
+  res.type('text/xml');
   return res.send(new twiml.MessagingResponse().toString());;
 });

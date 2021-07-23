@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/twilio-labs/twilio-firebase-extensions#readme",
   "devDependencies": {
+    "@jest-mock/express": "^1.4.2",
     "@types/jest": "^26.0.24",
     "firebase-tools": "^9.14.0",
     "jest": "^27.0.6",
