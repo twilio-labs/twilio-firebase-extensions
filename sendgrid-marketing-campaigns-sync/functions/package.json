@@ -1,7 +1,7 @@
 {
-  "name": "firestore-send-twilio-message",
+  "name": "sendgrid-marketing-campaigns-sync",
   "version": "0.1.0",
-  "description": "Send messages with the Twilio API by adding documents to a Firestore collection",
+  "description": "Add and remove contacts to your email list in SendGrid Marketing Campaigns by adding documents to a Firestore collection",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -12,8 +12,10 @@
     "generate-readme": "firebase ext:info .. --markdown > ../README.md"
   },
   "keywords": [
-    "twilio",
-    "firebase"
+    "sendgrid",
+    "email",
+    "firebase",
+    "firestore"
   ],
   "author": "Twilio Inc. <open-source@twilio.com> (https://www.twilio.com/labs)",
   "contributors": [
@@ -21,18 +23,16 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase-admin": "^9.10.0",
-    "firebase-functions": "^3.14.1",
-    "twilio": "^3.65.0",
-    "undefined": "/Users/pnash/projects/firebase-projects/twilio-firebase-extensions/sendgrid-marketing-campaigns-sync/functions"
+    "firebase-admin": "^9.11.0",
+    "firebase-functions": "^3.14.1"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.28.2",
-    "@typescript-eslint/parser": "^4.28.2",
-    "eslint": "^7.30.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "eslint": "^7.32.0",
     "eslint-config-google": "^0.14.0",
-    "eslint-plugin-import": "^2.23.4",
-    "firebase-functions-test": "^0.3.0",
+    "eslint-plugin-import": "^2.24.0",
+    "firebase-functions-test": "^0.3.1",
     "rimraf": "^3.0.2",
     "typescript": "^4.3.5"
   }
