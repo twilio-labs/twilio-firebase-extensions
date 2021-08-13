@@ -1,7 +1,7 @@
 {
   "packages": [
-    "*",
-    "firestore-send-twilio-message/functions"
+    "firestore-send-twilio-message/functions",
+    "sendgrid-marketing-campaigns-sync/functions"
   ],
   "version": "0.0.0"
 }

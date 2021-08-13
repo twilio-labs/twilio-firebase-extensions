@@ -1,0 +1,115 @@
+name: sendgrid-marketing-campaigns-sync
+version: 0.1.0
+specVersion: v1beta
+
+displayName: Add and remove contacts from your SendGrid marketing campaigns contacts list
+description: Keeps a Firestore collection of contact data synced with a SendGrid Marketing Campaign contacts list
+
+license: Apache-2.0
+
+sourceUrl: https://github.com/twilio-labs/twilio-firebase-extensions/tree/main/sendgrid-marketing-campaigns-sync
+releaseNotesUrl: https://github.com/firebase/extensions/blob/main/sendgrid-marketing-campaigns-sync/CHANGELOG.md
+
+author:
+  authorName: Twilio
+  url: https://www.twilio.com
+
+contributors:
+  - authorName: Phil Nash
+    email: philnash@twilio.com
+    url: https://philna.sh
+
+billingRequired: true
+
+roles:
+  - role: datastore.user
+    reason: Allows this extension to access Cloud Firestore to read and process added message documents.
+
+resources:
+  - name: processQueue
+    type: firebaseextensions.v1beta.function
+    description: >-
+      Processes document changes in the specified Cloud Firestore collection,
+      adds contact data to the contacts list in your SendGrid Marketing Campaign
+    properties:
+      location: ${param:LOCATION}
+      runtime: nodejs14
+      eventTrigger:
+        eventType: providers/cloud.firestore/eventTypes/document.write
+        resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:CONTACTS_COLLECTION}/{id}
+
+params:
+  - param: LOCATION
+    label: Cloud Functions location
+    description: >-
+      Where do you want to deploy the functions created for this extension?
+      You usually want a location close to your database. For help selecting a
+      location, refer to the [location selection
+      guide](https://firebase.google.com/docs/functions/locations).
+    type: select
+    options:
+      - label: Iowa (us-central1)
+        value: us-central1
+      - label: South Carolina (us-east1)
+        value: us-east1
+      - label: Northern Virginia (us-east4)
+        value: us-east4
+      - label: Warsaw (europe-central2)
+        value: europe-central2
+      - label: Los Angeles (us-west2)
+        value: us-west2
+      - label: Salt Lake City (us-west3)
+        value: us-west3
+      - label: Las Vegas (us-west4)
+        value: us-west4
+      - label: Warsaw (europe-central2)
+        value: europe-central2
+      - label: Belgium (europe-west1)
+        value: europe-west1
+      - label: London (europe-west2)
+        value: europe-west2
+      - label: Frankfurt (europe-west3)
+        value: europe-west3
+      - label: Zurich (europe-west6)
+        value: europe-west6
+      - label: Hong Kong (asia-east2)
+        value: asia-east2
+      - label: Tokyo (asia-northeast1)
+        value: asia-northeast1
+      - label: Osaka (asia-northeast2)
+        value: asia-northeast2
+      - label: Seoul (asia-northeast3)
+        value: asia-northeast3
+      - label: Mumbai (asia-south1)
+        value: asia-south1
+      - label: Jakarta (asia-southeast2)
+        value: asia-southeast2
+      - label: Montreal (northamerica-northeast1)
+        value: northamerica-northeast1
+      - label: Sao Paulo (southamerica-east1)
+        value: southamerica-east1
+      - label: Sydney (australia-southeast1)
+        value: australia-southeast1
+    default: us-central1
+    required: true
+    immutable: true
+
+  - param: SENDGRID_API_KEY
+    label: SendGrid API Key
+    description: >-
+      A SendGrid API key with permission to add contacts to the marketing campaign
+    type: string
+    example: SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    validationRegex: ^SG\.[a-zA-Z0-9\.\-_]+$
+    validationErrorMessage: Invalid SendGrid API Key. Must be in the form `SG.xxx`.
+    required: true
+
+  - param: CONTACTS_COLLECTION
+    label: Contacts documents collection
+    description: >-
+      What is the path to the collection that contains the documents with the contacts details?
+    type: string
+    default: contacts
+    validationRegex: "^[^/]+(/[^/]+/[^/]+)*$"
+    validationErrorMessage: Must be a valid Cloud Firestore collection.
+    required: true
