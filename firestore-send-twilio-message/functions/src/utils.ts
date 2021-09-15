@@ -1,5 +1,6 @@
 import * as admin from "firebase-admin";
 import { Twilio } from "twilio";
+import * as pkgJson from "../package.json";
 
 import config from "./config";
 
@@ -15,7 +16,13 @@ export function initialize(): void {
     twilioClient = new Twilio(
       config.twilio.accountSid,
       config.twilio.authToken,
-      { lazyLoading: true }
+      {
+        lazyLoading: true,
+        userAgentExtensions: [
+          "twilio-firebase-extensions",
+          `firestore-send-twilio-message/${pkgJson.version}`,
+        ],
+      }
     );
     initialized = true;
     return;
@@ -28,7 +35,9 @@ export function initialize(): void {
 
 export function getFunctionsUrl(functionName: string): string {
   if (process.env.IS_FIREBASE_CLI) {
-    const baseUrl = process.env.HTTP_TUNNEL ? `https://${process.env.HTTP_TUNNEL}/` : "http://localhost:5001/";
+    const baseUrl = process.env.HTTP_TUNNEL
+      ? `https://${process.env.HTTP_TUNNEL}/`
+      : "http://localhost:5001/";
     return `${baseUrl}${config.projectId}/${config.location}/${functionName}`;
   } else {
     return `https://${config.location}-${config.projectId}.cloudfunctions.net/${functionName}`;
