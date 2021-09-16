@@ -4,7 +4,9 @@
     "outDir": "lib",
     "sourceRoot": "src",
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports":true
   },
-  "include": ["src"]
+  "include": ["src"],
 }

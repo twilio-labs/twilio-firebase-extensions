@@ -4,6 +4,7 @@
   "description": "Send messages with the Twilio API by adding documents to a Firestore collection",
   "main": "lib/index.js",
   "scripts": {
+    "prebuild": "node -p \"'export const APP_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf lib",
     "compile": "tsc",
