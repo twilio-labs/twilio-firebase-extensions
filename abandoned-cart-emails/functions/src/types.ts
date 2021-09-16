@@ -37,3 +37,10 @@ export type QueuePayload = {
   from: string;
   replyTo?: string;
 };
+
+export type CartDocument = {
+  metadata?: {
+    lastUpdated: FirebaseFirestore.Timestamp;
+  };
+  [key: string]: any;
+};
