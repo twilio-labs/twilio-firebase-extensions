@@ -36,19 +36,28 @@ export const processCartCheck = functions.handler.pubsub.schedule.onRun(
             const userId = templateData.userId || doc.ref.id;
             const user = await admin.auth().getUser(userId);
             delete templateData.metadata;
-            if (templateData.items && templateData.items.length > 0) {
-              await admin.firestore().collection(config.emailCollection).add({
-                to: user.email,
-                dynamicTemplateData: templateData,
-              });
+            if (!user.email) {
               await admin.firestore().runTransaction((transaction) => {
                 transaction.update(doc.ref, {
-                  "metadata.emailSent": true,
-                  "metadata.emailSentAt":
-                    admin.firestore.FieldValue.serverTimestamp(),
+                  "metadata.error": "User does not have email address",
                 });
                 return Promise.resolve();
               });
+            } else {
+              if (templateData.items && templateData.items.length > 0) {
+                await admin.firestore().collection(config.emailCollection).add({
+                  to: user.email,
+                  dynamicTemplateData: templateData,
+                });
+                await admin.firestore().runTransaction((transaction) => {
+                  transaction.update(doc.ref, {
+                    "metadata.emailSent": true,
+                    "metadata.emailSentAt":
+                      admin.firestore.FieldValue.serverTimestamp(),
+                  });
+                  return Promise.resolve();
+                });
+              }
             }
           } catch (error) {
             // User not found, we should not try to send again
