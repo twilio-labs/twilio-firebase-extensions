@@ -1,8 +1,8 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-import { QueuePayload } from "./types";
 import config from "./config";
-import { initialize, twilioClient, getFunctionsUrl } from "./utils";
+import { QueuePayload, ResponseError, EmailSendError } from "./types";
+import { sendgridClient, initialize } from "./utils";
 
 async function deliverMessage(
   payload: QueuePayload,
@@ -13,51 +13,45 @@ async function deliverMessage(
     "delivery.endTime": admin.firestore.FieldValue.serverTimestamp(),
     "delivery.leaseExpireTime": null,
     "delivery.state": "SUCCESS",
-    "delivery.info": {},
-    "delivery.errorCode": "",
     "delivery.errorMessage": "",
+    "delivery.errors": new Array<EmailSendError>(),
   };
-
   try {
-    const from =
-      payload.from ||
-      config.twilio.messagingServiceSid ||
-      config.twilio.phoneNumber;
-    const { to, body } = payload;
-    const message = await twilioClient.messages.create({
-      from,
-      to,
-      body,
-      statusCallback: getFunctionsUrl("statusCallback"),
-    });
-    const info = {
-      messageSid: message.sid,
-      status: message.status,
-      dateCreated: message.dateCreated
-        ? admin.firestore.Timestamp.fromDate(message.dateCreated)
-        : null,
-      dateSent: message.dateSent
-        ? admin.firestore.Timestamp.fromDate(message.dateSent)
-        : null,
-      dateUpdated: message.dateUpdated
-        ? admin.firestore.Timestamp.fromDate(message.dateUpdated)
-        : null,
-      messagingServiceSid: message.messagingServiceSid,
-      numMedia: message.numMedia,
-      numSegments: message.numSegments,
-    };
-    update["delivery.state"] = "SUCCESS";
-    update["delivery.info"] = info;
-    functions.logger.log(
-      `Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`
-    );
+    const from = payload.from || config.sendgrid.defaultFrom;
+    const templateId = payload.templateId || config.sendgrid.defaultTemplateId;
+    if (!from) {
+      update["delivery.state"] = "ERROR";
+      update["delivery.errorMessage"] = "";
+    } else if (!templateId) {
+      update["delivery.state"] = "ERROR";
+      update["delivery.errorMessage"] = "";
+    } else {
+      const mail = {
+        to: payload.to,
+        from,
+        templateId,
+        dynamicTemplateData: payload.dynamicTemplateData,
+      };
+      await sendgridClient.send(mail);
+    }
   } catch (error) {
     update["delivery.state"] = "ERROR";
-    update["delivery.errorCode"] = error.code;
-    update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
-    functions.logger.error(
-      `Error when delivering message: ${ref.path}: ${error.toString()}`
-    );
+    if (error instanceof Error) {
+      update["delivery.errorMessage"] = error.message;
+      const responseError = error as ResponseError;
+      if (responseError.response) {
+        if (
+          responseError.response &&
+          responseError.response.body &&
+          responseError.response.body.errors
+        ) {
+          update["delivery.errors"] = responseError.response.body.errors;
+          functions.logger.error(
+            `Error when sending email: ${ref.path}: ${error.toString()}`
+          );
+        }
+      }
+    }
   }
 
   return admin.firestore().runTransaction((transaction) => {
@@ -79,9 +73,8 @@ function processCreate(
         delivery: {
           startTime: admin.firestore.FieldValue.serverTimestamp(),
           state: "PENDING",
-          errorCode: null,
           errorMessage: null,
-          info: null,
+          errors: [],
         },
       });
       return Promise.resolve();
@@ -152,7 +145,7 @@ async function processWrite(
   }
 }
 
-export const processQueue = functions.handler.firestore.document.onWrite(
+export const processEmailQueue = functions.handler.firestore.document.onWrite(
   async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
     // Initialize Firebase and Twilio clients
     initialize();
@@ -162,8 +155,6 @@ export const processQueue = functions.handler.firestore.document.onWrite(
       functions.logger.error(error);
       return;
     }
-    functions.logger.log(
-      "Completed execution of Twilio send message extension."
-    );
+    functions.logger.log("Completed execution of SendGrid email.");
   }
 );
