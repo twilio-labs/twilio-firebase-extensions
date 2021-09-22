@@ -24,14 +24,29 @@ const admin = __importStar(require("firebase-admin"));
 const functions = __importStar(require("firebase-functions"));
 const utils_1 = require("./utils");
 function updateLastUpdated(snapshot) {
+    const payload = snapshot.data();
+    let update;
+    if (payload?.metadata) {
+        update = {
+            metadata: {
+                ...payload.metadata,
+                lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+            },
+        };
+    }
+    else {
+        update = {
+            metadata: {
+                lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+                emailSent: false,
+                error: "",
+            },
+        };
+    }
     return admin
         .firestore()
         .runTransaction((transaction) => {
-        transaction.update(snapshot.ref, {
-            metadata: {
-                lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
-            },
-        });
+        transaction.update(snapshot.ref, update);
         return Promise.resolve();
     });
 }

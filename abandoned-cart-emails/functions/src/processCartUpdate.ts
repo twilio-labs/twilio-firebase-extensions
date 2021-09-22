@@ -3,17 +3,39 @@ import * as functions from "firebase-functions";
 import { initialize } from "./utils";
 import { CartDocument } from "./types";
 
+type MetadataUpdate = {
+  metadata: {
+    lastUpdated: FirebaseFirestore.FieldValue;
+    emailSent?: boolean;
+    error?: string;
+  };
+};
+
 function updateLastUpdated(
   snapshot: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>
 ) {
+  const payload = snapshot.data();
+  let update: MetadataUpdate;
+  if (payload?.metadata) {
+    update = {
+      metadata: {
+        ...payload.metadata,
+        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+      },
+    };
+  } else {
+    update = {
+      metadata: {
+        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+        emailSent: false,
+        error: "",
+      },
+    };
+  }
   return admin
     .firestore()
     .runTransaction((transaction: admin.firestore.Transaction) => {
-      transaction.update(snapshot.ref, {
-        metadata: {
-          lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
-        },
-      });
+      transaction.update(snapshot.ref, update);
       return Promise.resolve();
     });
 }

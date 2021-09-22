@@ -49,15 +49,13 @@ resources:
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:CART_COLLECTION}/{id}
-  # - name: statusCallback
-  #   type: firebaseextensions.v1beta.function
-  #   description: >-
-  #     An HTTP triggered function that receives status callback webhooks from
-  #     Twilio and updates the delivery status of a message document.
-  #   properties:
-  #     location: ${param:LOCATION}
-  #     runtime: nodejs14
-  #     httpsTrigger: {}
+  - name: processCartCheck
+    type: firebaseextensions.v1beta.function
+    properties:
+      location: ${param:LOCATION}
+      runtime: nodejs14
+      scheduleTrigger:
+        schedule: ${param:CART_CHECK_INTERVAL}
 
 params:
   - param: LOCATION
@@ -169,3 +167,13 @@ params:
     example: "180"
     validationRegex: ^\d+$
     validationErrorMessage: "Invalid abandoned timeout, please enter a whole number of minutes."
+    required: true
+
+  - param: CART_CHECK_INTERVAL
+    label: Time in minutes between checks for abandoned carts
+    description: >-
+      The amount of time in minutes between each check for abandoned carts.
+    type: string
+    default: "every 5 minutes"
+    example: "every 5 minutes"
+    required: true

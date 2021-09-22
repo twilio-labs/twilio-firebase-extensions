@@ -9,4 +9,5 @@ export default {
   projectId: process.env.PROJECT_ID,
   cartCollection: process.env.CART_COLLECTION || "cart",
   emailCollection: process.env.EMAIL_COLLECTION || "cart_emails",
+  abandonedTimeout: process.env.ABANDONED_TIMEOUT,
 };
