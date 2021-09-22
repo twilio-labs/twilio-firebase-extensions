@@ -56,17 +56,19 @@ exports.processCartCheck = functions.handler.pubsub.schedule.onRun(async (contex
                     const userId = templateData.userId || doc.ref.id;
                     const user = await admin.auth().getUser(userId);
                     delete templateData.metadata;
-                    await admin.firestore().collection(config_1.default.emailCollection).add({
-                        to: user.email,
-                        dynamicTemplateData: templateData,
-                    });
-                    await admin.firestore().runTransaction((transaction) => {
-                        transaction.update(doc.ref, {
-                            "metadata.emailSent": true,
-                            "metadata.emailSentAt": admin.firestore.FieldValue.serverTimestamp(),
+                    if (templateData.items && templateData.items.length > 0) {
+                        await admin.firestore().collection(config_1.default.emailCollection).add({
+                            to: user.email,
+                            dynamicTemplateData: templateData,
                         });
-                        return Promise.resolve();
-                    });
+                        await admin.firestore().runTransaction((transaction) => {
+                            transaction.update(doc.ref, {
+                                "metadata.emailSent": true,
+                                "metadata.emailSentAt": admin.firestore.FieldValue.serverTimestamp(),
+                            });
+                            return Promise.resolve();
+                        });
+                    }
                 }
                 catch (error) {
                     // User not found, we should not try to send again
