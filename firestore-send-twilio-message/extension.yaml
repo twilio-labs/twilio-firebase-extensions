@@ -115,6 +115,7 @@ params:
 
   - param: TWILIO_AUTH_TOKEN
     label: Twilio Auth Token
+    type: secret
     description: >-
       Your Twilio Auth Token, which you can find in your Twilio console.
     type: string
