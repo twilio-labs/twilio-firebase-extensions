@@ -25,7 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFunctionsUrl = exports.initialize = exports.twilioClient = void 0;
 const admin = __importStar(require("firebase-admin"));
 const twilio_1 = require("twilio");
-const pkgJson = __importStar(require("../package.json"));
+const version_1 = require("./version");
 const config_1 = __importDefault(require("./config"));
 let initialized = false;
 function initialize() {
@@ -38,7 +38,7 @@ function initialize() {
             lazyLoading: true,
             userAgentExtensions: [
                 "twilio-firebase-extensions",
-                `firestore-send-twilio-message/${pkgJson.version}`,
+                `firestore-send-twilio-message/${version_1.APP_VERSION}`,
             ],
         });
         initialized = true;

@@ -1,6 +1,7 @@
 import * as admin from "firebase-admin";
 import { Twilio } from "twilio";
-import * as pkgJson from "../package.json";
+
+import { APP_VERSION } from './version';
 
 import config from "./config";
 
@@ -20,7 +21,7 @@ export function initialize(): void {
         lazyLoading: true,
         userAgentExtensions: [
           "twilio-firebase-extensions",
-          `firestore-send-twilio-message/${pkgJson.version}`,
+          `firestore-send-twilio-message/${APP_VERSION}`,
         ],
       }
     );
