@@ -31,7 +31,6 @@ async function deliverMessage(payload, ref) {
     functions.logger.log(`Attempting delivery for message: ${ref.path}`);
     const update = {
         "delivery.endTime": admin.firestore.FieldValue.serverTimestamp(),
-        "delivery.error": null,
         "delivery.leaseExpireTime": null,
         "delivery.state": "SUCCESS",
         "delivery.info": {},
@@ -43,12 +42,11 @@ async function deliverMessage(payload, ref) {
             config_1.default.twilio.messagingServiceSid ||
             config_1.default.twilio.phoneNumber;
         const { to, body } = payload;
-        console.log(utils_1.getFunctionsUrl("statusCallback"));
         const message = await utils_1.twilioClient.messages.create({
             from,
             to,
             body,
-            statusCallback: utils_1.getFunctionsUrl("statusCallback")
+            statusCallback: utils_1.getFunctionsUrl("statusCallback"),
         });
         const info = {
             messageSid: message.sid,
