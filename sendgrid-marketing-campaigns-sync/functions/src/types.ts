@@ -11,7 +11,7 @@ export type UserInput<T> = T & { [key: string]: any };
 
 export type ContactData = {
   email: string;
-  altername_emails?: string[];
+  alternate_emails?: string[];
   first_name?: string;
   last_name?: string;
   address_line_1?: string;
