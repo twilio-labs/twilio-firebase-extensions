@@ -4,7 +4,7 @@ You can test out this extension right away!
 
 1.  Go to your [Cloud Firestore dashboard](https://console.firebase.google.com/project/${param:PROJECT_ID}/firestore/data) in the Firebase console.
 
-1.  If it doesn't already exist, create the collection you specified during installation: `${param:MESSAGES_COLLECTION}`.
+1.  If it doesn't already exist, create the collection you specified during installation: `${param:MESSAGE_COLLECTION}`.
 
 1.  Add a document with a `to` field and a `body` field with the following content:
 
@@ -13,7 +13,7 @@ You can test out this extension right away!
     body: "Hello from Firebase!"
     ```
 
-2.  In a few seconds, you'll see a `delivery` field appear in the document. The field will update as the extension processes the message.
+1.  In a few seconds, you'll see a `delivery` field appear in the document. The field will update as the extension processes the message.
 
 **Note:** You can also use the [Firebase Admin SDK](https://firebase.google.com/docs/admin/setup) to add a document:
 
