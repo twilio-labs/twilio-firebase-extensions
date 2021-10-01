@@ -5,6 +5,8 @@ This repository contains the source code for Firebase Extensions that enable com
 
 * [Available Extensions](#available-extensions)
   * [Send Messages using Twilio](#send-messages-using-twilio)
+  * [Sync contacts to SendGrid Marketing Campaigns](#sync-contacts-to-sendgrid-marketing-campaigns)
+  * [Send emails when shopping carts are abandoned](#send-emails-when-shopping-carts-are-abandoned)
 * [Running the extensions locally](#running-the-extensions-locally)
 * [Contributing](#contributing)
   * [Code of Conduct](#code-of-conduct)
@@ -14,6 +16,14 @@ This repository contains the source code for Firebase Extensions that enable com
 ### Send Messages using Twilio
 
 * [Source code](./firestore-send-twilio-message/)
+
+### Sync contacts to SendGrid Marketing Campaigns
+
+* [Source code](./sendgrid-marketing-campaigns-sync/)
+
+### Send emails when shopping carts are abandoned
+
+* [Source code](./abandoned-cart-emails/)
 
 ## Running the extensions locally
 
