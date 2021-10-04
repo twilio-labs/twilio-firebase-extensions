@@ -1,5 +1,6 @@
 import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
+import isEqual from "lodash.isequal";
 import { initialize } from "./utils";
 import { CartDocument } from "./types";
 
@@ -68,7 +69,7 @@ async function processWrite(
   // changed. If so, updates the lastUpdated metadata field.
   delete beforeData.metadata;
   delete afterData.metadata;
-  if (JSON.stringify(beforeData) !== JSON.stringify(afterData)) {
+  if (!isEqual(beforeData, afterData)) {
     return updateLastUpdated(change.after);
   }
 }

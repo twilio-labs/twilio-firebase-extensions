@@ -33,7 +33,7 @@ async function createSendGridContact(opts) {
     // appear in a contact.
     const contact = {
         email: opts.email,
-        altername_emails: opts.altername_emails,
+        alternate_emails: opts.alternate_emails,
         first_name: opts.first_name,
         last_name: opts.last_name,
         address_line_1: opts.address_line_1,

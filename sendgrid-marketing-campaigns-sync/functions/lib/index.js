@@ -1,4 +1,5 @@
 "use strict";
+// Copyright 2021 Twilio Inc.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processQueue = void 0;
 var processQueue_1 = require("./processQueue");

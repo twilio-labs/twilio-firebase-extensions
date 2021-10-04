@@ -1,4 +1,5 @@
 "use strict";
+// Copyright 2021 Twilio Inc.
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processQueue = exports.statusCallback = void 0;
 var statusCallback_1 = require("./statusCallback");

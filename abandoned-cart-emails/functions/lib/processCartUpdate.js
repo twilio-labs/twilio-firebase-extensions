@@ -18,10 +18,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processCartUpdate = void 0;
 const admin = __importStar(require("firebase-admin"));
 const functions = __importStar(require("firebase-functions"));
+const lodash_isequal_1 = __importDefault(require("lodash.isequal"));
 const utils_1 = require("./utils");
 function updateLastUpdated(snapshot) {
     const payload = snapshot.data();
@@ -70,7 +74,7 @@ async function processWrite(change) {
     // changed. If so, updates the lastUpdated metadata field.
     delete beforeData.metadata;
     delete afterData.metadata;
-    if (JSON.stringify(beforeData) !== JSON.stringify(afterData)) {
+    if (!(0, lodash_isequal_1.default)(beforeData, afterData)) {
         return updateLastUpdated(change.after);
     }
 }
