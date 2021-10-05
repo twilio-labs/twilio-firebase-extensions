@@ -23,6 +23,41 @@ Due to the nature of the extension, it's difficult to see the full effects of th
 
 #### Using this extension
 
+##### Firestore indexes
+
+This extension requires a composite Firestore index. You can add the index in the Firebase console or by the command line.
+
+###### Indexes in the Firebase console
+
+1. Go to the **Cloud Firestore** section of the [Firebase console](https://console.firebase.google.com/project/_/firestore/data)
+1. Go to the **Indexes** tab and click **Add Index**
+2. Enter the collection name `${param:CART_COLLECTION}`
+3. Add the following fields to the index:
+   * `metadata.emailSent` - Ascending
+   * `metadata.error` - Ascending
+   * `metadata.lastUpdated` - Ascending
+4. Set the **Query scopes** to **Collection**
+5. Click **Create**
+
+###### Indexes with the Firebase CLI
+
+1. In your Firebase project, open your index configuration file, with default filename `firestore.indexes.json`
+1. Add the following object to the `indexes` array:
+    ```json
+    {
+      "collectionGroup": "${param:CART_COLLECTION}",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "metadata.emailSent", "order": "ASCENDING" },
+        { "fieldPath": "metadata.error", "order": "ASCENDING" },
+        { "fieldPath": "metadata.lastUpdated", "order": "ASCENDING" }
+      ]
+    }
+    ```
+
+    The `collectionGroup` name should be the collection name for your cart collection.
+1. Deploy your index configuration with the `firebase deploy` command. If you only want to deploy indexes, add the `--only firestore:indexes` flag.
+
 ##### The shopping cart
 
 A shopping cart should be implemented as a document per cart. How you store items in the document is up to you, but an array property called `items` containing information about each of the items in the cart is typical. The document should also have a reference to a [Firebase Authentication](https://firebase.google.com/docs/auth) User, either the cart document ID should match the user ID or there should be a `userId` property on the document. When you create the cart document or update properties on the cart document, the extension will update a `metadata.lastUpdated` timestamp.
