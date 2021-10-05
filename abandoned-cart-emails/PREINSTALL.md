@@ -13,6 +13,41 @@ Before installing this extension, make sure:
 * You have verified a single sender email address or set up domain authentication with SendGrid
 * You have a dynamic transactional template setup with which to send emails
 
+##### Firestore indexes
+
+This extension requires a composite Firestore index. You can add the index in the Firebase console or by the command line.
+
+###### Indexes in the Firebase console
+
+1. Go to the **Cloud Firestore** section of the [Firebase console](https://console.firebase.google.com/project/_/firestore/data)
+1. Go to the **Indexes** tab and click **Add Index**
+1. Enter the collection name for your cart collection
+1. Add the following fields to the index:
+   * `metadata.emailSent` - Ascending
+   * `metadata.error` - Ascending
+   * `metadata.lastUpdated` - Ascending
+2. Set the **Query scopes** to **Collection**
+3. Click **Create**
+
+###### Indexes with the Firebase CLI
+
+1. In your Firebase project, open your index configuration file, with default filename `firestore.indexes.json`
+1. Add the following object to the `indexes` array:
+    ```json
+    {
+      "collectionGroup": "cart",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "metadata.emailSent", "order": "ASCENDING" },
+        { "fieldPath": "metadata.error", "order": "ASCENDING" },
+        { "fieldPath": "metadata.lastUpdated", "order": "ASCENDING" }
+      ]
+    }
+    ```
+
+    The `collectionGroup` name should be the collection name for your cart collection.
+1. Deploy your index configuration with the `firebase deploy` command. If you only want to deploy indexes, add the `--only firestore:indexes` flag.
+
 #### How it works
 
 ##### The shopping cart
