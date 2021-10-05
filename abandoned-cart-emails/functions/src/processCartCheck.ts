@@ -36,7 +36,12 @@ export const processCartCheck = functions.handler.pubsub.schedule.onRun(
             const userId = templateData.userId || doc.ref.id;
             const user = await admin.auth().getUser(userId);
             delete templateData.metadata;
-            if (!user.email) {
+            templateData.user = {
+              email: user.email,
+              displayName: user.displayName,
+            };
+            const email = user.email;
+            if (!email) {
               await admin.firestore().runTransaction((transaction) => {
                 transaction.update(doc.ref, {
                   "metadata.error": "User does not have email address",
@@ -46,7 +51,7 @@ export const processCartCheck = functions.handler.pubsub.schedule.onRun(
             } else {
               if (templateData.items && templateData.items.length > 0) {
                 await admin.firestore().collection(config.emailCollection).add({
-                  to: user.email,
+                  to: email,
                   dynamicTemplateData: templateData,
                 });
                 await admin.firestore().runTransaction((transaction) => {

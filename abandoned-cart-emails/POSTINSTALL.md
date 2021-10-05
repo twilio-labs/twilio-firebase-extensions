@@ -29,25 +29,25 @@ A shopping cart should be implemented as a document per cart. How you store item
 
 ##### Checking the cart
 
-A function runs periodically to determine whether any carts are abandoned and should be emailed. You can configure the period with the `CART_CHECK_INTERVAL` using [cron.yaml syntax](https://cloud.google.com/appengine/docs/standard/python/config/cronref).
+A function runs periodically to determine whether any carts are abandoned and should be emailed. You can configure the period with the `CART_CHECK_INTERVAL` using [cron.yaml syntax](https://cloud.google.com/appengine/docs/standard/python/config/cronref). Yours is currently set to `${param:CART_CHECK_INTERVAL}`.
 
 There are a few conditions that a cart document must fulfill before it is processed to the next stage:
 
-* the `metadata.lastUpdated` timestamp should be older than the configurable `ABANDONED_TIMEOUT` time in minutes
+* the `metadata.lastUpdated` timestamp should be older than `${param:ABANDONED_TIMEOUT}` time in minutes
 * the `metadata.emailSent` boolean property should be `false`
 * there should be no errors present in the `metadata.error` property
 
-If all of these conditions are met, then the extension will attempt to load the user data using the `userId` property or the document's ID. If the user doesn't have an email address, an error will be recorded. If the user has an email address then a document will be created in the `EMAIL_COLLECTION`.
+If all of these conditions are met, then the extension will attempt to load the user data using the `userId` property or the document's ID. If the user doesn't have an email address, an error will be recorded. If the user has an email address then a document will be created in the `${param:EMAIL_COLLECTION}` collection. The document will include the user email and a property for `dynamicTemplateData` consisting of the contents of the user's cart and a `user` property including the user's `email` and `displayName` if present. This `dynamicTemplateData` is used to fill in the fields in a SendGrid dynamic email template.
 
 ##### Sending the email
 
-When a document is added to the `EMAIL_COLLECTION` the contents are queued up to be emailed using the Twilio SendGrid API. All the information from the cart document is added as dynamic template data for the email. You can configure a `DEFAULT_TEMPLATE_ID` which is the ID of a SendGrid dynamic template.
+When a document is added to the `${param:EMAIL_COLLECTION}` collection the contents are queued up to be emailed using the Twilio SendGrid API. All the information from the cart document is added as dynamic template data for the email. You can configure a `DEFAULT_TEMPLATE_ID` which is the ID of a SendGrid dynamic template.
 
 You can [create dynamic transactional templates in the SendGrid dashboard](https://mc.sendgrid.com/dynamic-templates). [SendGrid Templates use Handlebars](https://docs.sendgrid.com/for-developers/sending-email/using-handlebars) to render dynamic data into the email.
 
 You also need to configure your `DEFAULT_FROM` to be an email address that you have verified with SendGrid as either a [single sender](https://docs.sendgrid.com/ui/sending-email/sender-verification) or via [domain authentication](https://docs.sendgrid.com/ui/account-and-settings/how-to-set-up-domain-authentication). You can also set a `DEFAULT_REPLY_TO` email.
 
-You can trigger an email to be sent at any time by added a document to the `EMAIL_COLLECTION` with a `to` email address and a `dynamicTemplateData` property.
+You can trigger an email to be sent at any time by added a document to the `${param:EMAIL_COLLECTION}` collection with a `to` email address and a `dynamicTemplateData` property.
 
 ```js
 admin.firestore().collection('cart_emails').add({

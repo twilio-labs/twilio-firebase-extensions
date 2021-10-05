@@ -29,7 +29,7 @@ There are a few conditions that a cart document must fulfill before it is proces
 * the `metadata.emailSent` boolean property should be `false`
 * there should be no errors present in the `metadata.error` property
 
-If all of these conditions are met, then the extension will attempt to load the user data using the `userId` property or the document's ID. If the user doesn't have an email address, an error will be recorded. If the user has an email address then a document will be created in the `EMAIL_COLLECTION`.
+If all of these conditions are met, then the extension will attempt to load the user data using the `userId` property or the document's ID. If the user doesn't have an email address, an error will be recorded. If the user has an email address then a document will be created in the `EMAIL_COLLECTION`. The document will include the user email and a property for `dynamicTemplateData` consisting of the contents of the user's cart and a `user` property including the user's `email` and `displayName` if present. This `dynamicTemplateData` is used to fill in the fields in a SendGrid dynamic email template.
 
 ##### Sending the email
 

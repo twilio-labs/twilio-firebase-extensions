@@ -57,8 +57,9 @@ resources:
     properties:
       location: ${param:LOCATION}
       runtime: nodejs14
-      scheduleTrigger:
-        schedule: ${param:CART_CHECK_INTERVAL}
+      # scheduleTrigger:
+      #   schedule: ${param:CART_CHECK_INTERVAL}
+      httpsTrigger: {}
 
 params:
   - param: LOCATION
