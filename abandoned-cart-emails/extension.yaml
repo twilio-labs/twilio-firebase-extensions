@@ -25,6 +25,9 @@ roles:
   - role: datastore.user
     reason: Allows this extension to access Cloud Firestore to read and process added message documents.
 
+  - role: firebaseauth.viewer
+    reason: Allows this extension to access Firebase Auth to read user information.
+
 resources:
   - name: processEmailQueue
     type: firebaseextensions.v1beta.function
