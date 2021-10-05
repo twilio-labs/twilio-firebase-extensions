@@ -30,7 +30,7 @@ export async function createContact(data: ContactData): Promise<string> {
     const response = await sendGridClient.request(request);
     const clientResponse = response[0] as Response<Job>;
     return clientResponse.body.job_id;
-  } catch (error) {
+  } catch (error: any) {
     const response = error.response as Response<ErrorResponse>;
     throw new SendGridError(response);
   }
@@ -53,7 +53,7 @@ export async function getContactId(email: string) {
     } else {
       return null;
     }
-  } catch (error) {
+  } catch (error: any) {
     const response = error.response as Response<ErrorResponse>;
     throw new SendGridError(response);
   }
@@ -69,7 +69,7 @@ export async function deleteContact(id: string) {
     const response = await sendGridClient.request(request);
     const clientResponse = response[0] as Response<Job>;
     return clientResponse.body.job_id;
-  } catch (error) {
+  } catch (error: any) {
     const response = error.response as Response<ErrorResponse>;
     throw new SendGridError(response);
   }

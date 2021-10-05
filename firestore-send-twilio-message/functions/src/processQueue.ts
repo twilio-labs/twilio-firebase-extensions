@@ -51,9 +51,9 @@ async function deliverMessage(
     functions.logger.log(
       `Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`
     );
-  } catch (error) {
+  } catch (error: any) {
     update["delivery.state"] = "ERROR";
-    update["delivery.errorCode"] = error.code;
+    update["delivery.errorCode"] = error.code.toString();
     update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
     functions.logger.error(
       `Error when delivering message: ${ref.path}: ${error.toString()}`

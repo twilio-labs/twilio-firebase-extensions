@@ -30,7 +30,11 @@ async function createSendGridContact(opts: UserInput<ContactData>) {
     const jobId = await createContact(contact);
     return { state: "SUCCESS", jobId: jobId };
   } catch (error) {
-    return { state: "ERROR", error: error.message };
+    if (error instanceof Error) {
+      return { state: "ERROR", error: error.message };
+    } else {
+      return { state: "ERROR", error: `Unknown error: ${String(error)}` };
+    }
   }
 }
 
@@ -62,7 +66,11 @@ async function processDelete(
       return;
     }
   } catch (error) {
-    functions.logger.error(error.message);
+    if (error instanceof Error) {
+      functions.logger.error(error.message);
+    } else {
+      functions.logger.error(`Unknown error: ${String(error)}`);
+    }
     return;
   }
 }

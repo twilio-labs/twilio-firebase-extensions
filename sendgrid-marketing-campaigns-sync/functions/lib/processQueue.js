@@ -50,11 +50,16 @@ async function createSendGridContact(opts) {
         custom_fields: opts.custom_fields,
     };
     try {
-        const jobId = await sendgrid_1.createContact(contact);
+        const jobId = await (0, sendgrid_1.createContact)(contact);
         return { state: "SUCCESS", jobId: jobId };
     }
     catch (error) {
-        return { state: "ERROR", error: error.message };
+        if (error instanceof Error) {
+            return { state: "ERROR", error: error.message };
+        }
+        else {
+            return { state: "ERROR", error: `Unknown error: ${String(error)}` };
+        }
     }
 }
 async function startUpdate(snapshot) {
@@ -70,9 +75,9 @@ async function startUpdate(snapshot) {
 async function processDelete(snapshot) {
     const contact = snapshot.data();
     try {
-        const id = await sendgrid_1.getContactId(contact.email);
+        const id = await (0, sendgrid_1.getContactId)(contact.email);
         if (id) {
-            return sendgrid_1.deleteContact(id);
+            return (0, sendgrid_1.deleteContact)(id);
         }
         else {
             functions.logger.error("Cannot delete email that isn't present in the contacts list.");
@@ -80,7 +85,12 @@ async function processDelete(snapshot) {
         }
     }
     catch (error) {
-        functions.logger.error(error.message);
+        if (error instanceof Error) {
+            functions.logger.error(error.message);
+        }
+        else {
+            functions.logger.error(`Unknown error: ${String(error)}`);
+        }
         return;
     }
 }
@@ -111,7 +121,7 @@ async function processWrite(change) {
                 if (compareBefore) {
                     const { meta: metaBefore, ...beforeData } = compareBefore;
                     const { meta: metaAfter, ...afterData } = payload;
-                    if (!lodash_isequal_1.default(beforeData, afterData)) {
+                    if (!(0, lodash_isequal_1.default)(beforeData, afterData)) {
                         return startUpdate(change.after);
                     }
                 }
@@ -129,7 +139,7 @@ async function processWrite(change) {
 }
 exports.processQueue = functions.handler.firestore.document.onWrite(async (change) => {
     // Initialize Firebase and SendGrid clients
-    utils_1.initialize();
+    (0, utils_1.initialize)();
     try {
         await processWrite(change);
     }

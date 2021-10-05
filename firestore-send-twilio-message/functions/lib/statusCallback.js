@@ -29,10 +29,10 @@ const twilio_1 = require("twilio");
 const utils_1 = require("./utils");
 const config_1 = __importDefault(require("./config"));
 exports.statusCallback = functions.handler.https.onRequest(async (req, res) => {
-    utils_1.initialize();
+    (0, utils_1.initialize)();
     const { twilio: { authToken }, } = config_1.default;
     const signature = req.get("x-twilio-signature");
-    const url = utils_1.getFunctionsUrl("statusCallback");
+    const url = (0, utils_1.getFunctionsUrl)("statusCallback");
     const params = req.body;
     if (!signature) {
         return res
@@ -46,7 +46,7 @@ exports.statusCallback = functions.handler.https.onRequest(async (req, res) => {
             .status(500)
             .send("Webhook Error - we attempted to validate this request without first configuring our auth token.");
     }
-    if (!twilio_1.validateRequest(authToken, signature, url, params)) {
+    if (!(0, twilio_1.validateRequest)(authToken, signature, url, params)) {
         return res
             .type("text/plain")
             .status(403)

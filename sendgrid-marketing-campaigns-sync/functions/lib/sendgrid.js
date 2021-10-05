@@ -41,7 +41,7 @@ async function getContactId(email) {
         const response = await utils_1.sendGridClient.request(request);
         const clientResponse = response[0];
         const result = clientResponse.body.result[email];
-        if (utils_1.hasOwnProperty(result, "contact")) {
+        if ((0, utils_1.hasOwnProperty)(result, "contact")) {
             return result.contact.id;
         }
         else {

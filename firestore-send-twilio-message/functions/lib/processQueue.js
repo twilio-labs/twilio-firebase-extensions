@@ -46,7 +46,7 @@ async function deliverMessage(payload, ref) {
             from,
             to,
             body,
-            statusCallback: utils_1.getFunctionsUrl("statusCallback"),
+            statusCallback: (0, utils_1.getFunctionsUrl)("statusCallback"),
         });
         const info = {
             messageSid: message.sid,
@@ -70,7 +70,7 @@ async function deliverMessage(payload, ref) {
     }
     catch (error) {
         update["delivery.state"] = "ERROR";
-        update["delivery.errorCode"] = error.code;
+        update["delivery.errorCode"] = error.code.toString();
         update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
         functions.logger.error(`Error when delivering message: ${ref.path}: ${error.toString()}`);
     }
@@ -151,7 +151,7 @@ async function processWrite(change) {
 }
 exports.processQueue = functions.handler.firestore.document.onWrite(async (change) => {
     // Initialize Firebase and Twilio clients
-    utils_1.initialize();
+    (0, utils_1.initialize)();
     try {
         await processWrite(change);
     }
