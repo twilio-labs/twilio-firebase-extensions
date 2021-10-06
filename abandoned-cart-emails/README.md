@@ -1,4 +1,4 @@
-# Send emails when users abandon their shopping cart
+# Send Abandoned Cart reminders with SendGrid
 
 **Author**: Twilio (**[https://www.twilio.com](https://www.twilio.com)**)
 

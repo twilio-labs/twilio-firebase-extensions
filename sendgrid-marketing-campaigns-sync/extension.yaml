@@ -2,7 +2,7 @@ name: sendgrid-marketing-campaigns-sync
 version: 0.1.0
 specVersion: v1beta
 
-displayName: Add and remove contacts from your SendGrid marketing campaigns contacts list
+displayName: Sync Contacts with SendGrid
 description: Keeps a Firestore collection of contact data synced with a SendGrid Marketing Campaign contacts list
 
 license: Apache-2.0
@@ -20,6 +20,10 @@ contributors:
     url: https://philna.sh
 
 billingRequired: true
+
+externalServices:
+  - name: Twilio SendGrid
+    PricingUri: https://sendgrid.com/pricing/
 
 roles:
   - role: datastore.user

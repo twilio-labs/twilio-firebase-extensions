@@ -1,4 +1,4 @@
-# Add and remove contacts from your SendGrid marketing campaigns contacts list
+# Sync Contacts with SendGrid
 
 **Author**: Twilio (**[https://www.twilio.com](https://www.twilio.com)**)
 

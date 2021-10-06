@@ -2,7 +2,7 @@ name: firestore-send-twilio-message
 version: 0.1.0
 specVersion: v1beta
 
-displayName: Trigger Message with the Twilio API
+displayName: Send Messages with Twilio
 description: Sends a message using the Twilio API based on the contents of a document written to a specified Cloud Firestore collection.
 
 license: Apache-2.0
@@ -20,6 +20,10 @@ contributors:
     url: https://philna.sh
 
 billingRequired: true
+
+externalServices:
+  - name: Twilio
+    PricingUri: https://www.twilio.com/pricing
 
 roles:
   - role: datastore.user

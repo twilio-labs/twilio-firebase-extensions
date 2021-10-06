@@ -2,7 +2,7 @@ name: abandoned-cart-emails
 version: 0.1.0
 specVersion: v1beta
 
-displayName: Send emails when users abandon their shopping cart
+displayName: Send Abandoned Cart reminders with SendGrid
 description: Watches a cart collection keeping track of the last updated time of a cart object. When it is over a certain period, send the user an email based on a SendGrid Dynamic Template.
 
 license: Apache-2.0
@@ -20,6 +20,10 @@ contributors:
     url: https://philna.sh
 
 billingRequired: true
+
+externalServices:
+  - name: Twilio SendGrid
+    PricingUri: https://sendgrid.com/pricing/
 
 roles:
   - role: datastore.user
