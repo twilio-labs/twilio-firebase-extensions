@@ -44,7 +44,7 @@ function initialize() {
 }
 exports.initialize = initialize;
 function hasOwnProperty(obj, prop) {
-    return obj.hasOwnProperty(prop);
+    return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 exports.hasOwnProperty = hasOwnProperty;
 //# sourceMappingURL=utils.js.map
