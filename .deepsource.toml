@@ -1,0 +1,7 @@
+version = 1
+
+exclude_patterns = ["*/functions/lib/*.js"]
+
+[[analyzers]]
+name = "javascript"
+enabled = true
