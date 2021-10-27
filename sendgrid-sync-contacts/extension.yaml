@@ -1,4 +1,4 @@
-name: sendgrid-marketing-campaigns-sync
+name: sendgrid-sync-contacts
 version: 0.1.0
 specVersion: v1beta
 
@@ -7,8 +7,8 @@ description: Keeps a Firestore collection of contact data synced with a SendGrid
 
 license: Apache-2.0
 
-sourceUrl: https://github.com/twilio-labs/twilio-firebase-extensions/tree/main/sendgrid-marketing-campaigns-sync
-releaseNotesUrl: https://github.com/firebase/extensions/blob/main/sendgrid-marketing-campaigns-sync/CHANGELOG.md
+sourceUrl: https://github.com/twilio-labs/twilio-firebase-extensions/tree/main/sendgrid-sync-contacts
+releaseNotesUrl: https://github.com/firebase/extensions/blob/main/sendgrid-sync-contacts/CHANGELOG.md
 
 author:
   authorName: Twilio

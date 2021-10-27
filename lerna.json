@@ -1,7 +1,7 @@
 {
   "packages": [
     "send-message/functions",
-    "sendgrid-marketing-campaigns-sync/functions",
+    "sendgrid-sync-contacts/functions",
     "abandoned-cart-emails/functions"
   ],
   "version": "0.0.0"

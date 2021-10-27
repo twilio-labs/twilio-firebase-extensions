@@ -19,7 +19,7 @@ This repository contains the source code for Firebase Extensions that enable com
 
 ### Sync contacts to SendGrid Marketing Campaigns
 
-* [Source code](./sendgrid-marketing-campaigns-sync/)
+* [Source code](./sendgrid-sync-contacts/)
 
 ### Send emails when shopping carts are abandoned
 
