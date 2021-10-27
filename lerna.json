@@ -1,6 +1,6 @@
 {
   "packages": [
-    "firestore-send-twilio-message/functions",
+    "send-message/functions",
     "sendgrid-marketing-campaigns-sync/functions",
     "abandoned-cart-emails/functions"
   ],

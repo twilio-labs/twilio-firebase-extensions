@@ -15,7 +15,7 @@ This repository contains the source code for Firebase Extensions that enable com
 
 ### Send Messages using Twilio
 
-* [Source code](./firestore-send-twilio-message/)
+* [Source code](./send-message/)
 
 ### Sync contacts to SendGrid Marketing Campaigns
 

@@ -12,6 +12,6 @@ enabled = true
   dependency_file_paths = [
     "package.json",
     "abandoned-cart-emails/functions/package.json",
-    "firestore-send-twilio-message/functions/package.json",
+    "send-message/functions/package.json",
     "sendgrid-marketing-campaigns-sync/functions/package.json"
   ]

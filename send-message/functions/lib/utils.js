@@ -38,7 +38,7 @@ function initialize() {
             lazyLoading: true,
             userAgentExtensions: [
                 "twilio-firebase-extensions",
-                `firestore-send-twilio-message/${version_1.APP_VERSION}`,
+                `send-message/${version_1.APP_VERSION}`,
             ],
         });
         initialized = true;

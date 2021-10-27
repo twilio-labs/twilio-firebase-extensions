@@ -1,5 +1,5 @@
 {
-  "name": "firestore-send-twilio-message",
+  "name": "send-message",
   "version": "0.1.0",
   "description": "Send messages with the Twilio API by adding documents to a Firestore collection",
   "main": "lib/index.js",
