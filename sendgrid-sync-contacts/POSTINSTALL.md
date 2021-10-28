@@ -51,11 +51,11 @@ After its installation, this extension monitors all document writes to the `${pa
 
 `custom_fields` must be defined within your SendGrid account and are a map of the custom field's ID to the content.
 
-#### Security rules and sending messages
+#### Security rules and syncing contacts
 
-This extension can be used to trigger message delivery using the Twilio API directly from client applications. However, you should carefully control client access to the `${param:MESSAGE_COLLECTION}` collection to avoid potential abuse (you don't want users able to send arbitrary messages from your company's phone number or WhatsApp Business account!).
+This extension can be used to sync contacts with your SendGrid Marketing Campaigns account. However, you should carefully control client access to the `${param:CONTACTS_COLLECTION}` collection to avoid potential abuse (you don't want users to be able to add arbitrary email addresses to your contacts).
 
-Security rules will vary from application to application, but you should always make sure that messages are sent only to intended recipients and free-form content is kept to a minimum.
+Security rules will vary from application to application, but you should always make sure that only contacts that have agreed to join your list are added to the `${param:CONTACTS_COLLECTION}` collection.
 
 ### Monitoring
 
