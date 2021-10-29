@@ -2,7 +2,7 @@ name: abandoned-cart-emails
 version: 0.1.0
 specVersion: v1beta
 
-displayName: Send Abandoned Cart reminders with SendGrid
+displayName: Send Abandoned Cart Reminders with SendGrid
 description: Watches a cart collection keeping track of the last updated time of a cart object. When it is over a certain period, send the user an email based on a SendGrid Dynamic Template.
 
 license: Apache-2.0
