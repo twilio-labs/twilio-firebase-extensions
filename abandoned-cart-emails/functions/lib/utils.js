@@ -25,7 +25,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialize = exports.sendgridClient = void 0;
 const admin = __importStar(require("firebase-admin"));
 const config_1 = __importDefault(require("./config"));
+const client_1 = require("@sendgrid/client");
 const mail_1 = require("@sendgrid/mail");
+const version_1 = require("./version");
 let initialized = false;
 function initialize() {
     if (initialized) {
@@ -33,7 +35,13 @@ function initialize() {
     }
     if (config_1.default.sendgrid.apiKey) {
         admin.initializeApp();
+        const httpClient = new client_1.Client();
+        // @ts-ignore The client has a defaultHeaders property, it just isn't exposed in the types
+        const oldUserAgent = httpClient.defaultHeaders["User-Agent"];
+        const newUserAgent = `${oldUserAgent} twilio-firebase-extensions abandoned-cart-emails/${version_1.APP_VERSION}`;
+        httpClient.setDefaultHeader("User-Agent", newUserAgent);
         exports.sendgridClient = new mail_1.MailService();
+        exports.sendgridClient.setClient(httpClient);
         exports.sendgridClient.setApiKey(config_1.default.sendgrid.apiKey);
         initialized = true;
         return;
