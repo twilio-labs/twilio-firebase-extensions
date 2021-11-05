@@ -4,6 +4,7 @@
   "description": "Add and remove contacts to your email list in SendGrid Marketing Campaigns by adding documents to a Firestore collection",
   "main": "lib/index.js",
   "scripts": {
+    "prebuild": "node -p \"'export const APP_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf lib",
     "compile": "tsc",

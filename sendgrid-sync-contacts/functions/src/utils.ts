@@ -1,6 +1,7 @@
 import * as admin from "firebase-admin";
 import config from "./config";
 import { Client as SendGridClient } from "@sendgrid/client";
+import { APP_VERSION } from "./version";
 
 let initialized = false;
 export let sendGridClient: SendGridClient;
@@ -13,6 +14,10 @@ export function initialize(): void {
     admin.initializeApp();
     sendGridClient = new SendGridClient();
     sendGridClient.setApiKey(config.sendgrid.apiKey);
+    // @ts-ignore The client has a defaultHeaders property, it just isn't exposed in the types
+    const oldUserAgent = sendGridClient.defaultHeaders["User-Agent"];
+    const newUserAgent = `${oldUserAgent} twilio-firebase-extensions sendgrid-sync-contacts/${APP_VERSION}`;
+    sendGridClient.setDefaultHeader("User-Agent", newUserAgent);
     initialized = true;
     return;
   } else {
