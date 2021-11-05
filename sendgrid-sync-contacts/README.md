@@ -69,7 +69,7 @@ Usage of this extension also requires you to have a [Twilio SendGrid account](ht
 
 * Cloud Functions location: Where do you want to deploy the functions created for this extension? You usually want a location close to your database. For help selecting a location, refer to the [location selection guide](https://firebase.google.com/docs/functions/locations).
 
-* SendGrid API Key: A SendGrid API key with permission to add contacts to the marketing campaign
+* SendGrid API Key: What is your SendGrid API key? It needs to have permission to add contacts to the marketing campaign.
 
 * Contacts documents collection: What is the path to the collection that contains the documents with the contacts details?
 

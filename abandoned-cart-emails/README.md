@@ -1,4 +1,4 @@
-# Send Abandoned Cart reminders with SendGrid
+# Send Abandoned Cart Reminders with SendGrid
 
 **Author**: Twilio (**[https://www.twilio.com](https://www.twilio.com)**)
 
@@ -113,21 +113,21 @@ Usage of this extension also requires you to have a [Twilio SendGrid account](ht
 
 * Cloud Functions location: Where do you want to deploy the functions created for this extension? You usually want a location close to your database. For help selecting a location, refer to the [location selection guide](https://firebase.google.com/docs/functions/locations).
 
-* SendGrid API Key: A SendGrid API key with permission to add contacts to the marketing campaign
+* SendGrid API Key: What is your SendGrid API key? Make sure it has permission to send emails.
 
 * Email documents collection: What is the path to the collection that contains the documents used to build and send the emails?
 
-* Default from email address: The default email address to send the emails from
+* Default from email address: What is the default email address to send the emails from?
 
-* Default email to set as reply-to: The default email address to set as the email reply-to field
+* Default email to set as reply-to: What is the default email address to set as the email reply-to field?
 
-* Default email dynamic template ID: The SendGrid Dynamic Template ID that you want to use by default
+* Default email dynamic template ID: What is the SendGrid Dynamic Template ID that you want to use by default
 
-* The collection your shopping cart is stored in: This is the collection that this extension should observe in order to calculate whether a cart has been abandoned.
+* The collection your shopping cart is stored in: What is is the collection that this extension should observe in order to calculate whether a cart has been abandoned?
 
-* Time in minutes: The amount of time in minutes a cart is inactive before this extension will send them an email
+* Time in minutes: What is the amount of time in minutes a cart is inactive before this extension will send them an email?
 
-* Time in minutes between checks for abandoned carts: The amount of time in minutes between each check for abandoned carts.
+* Schedule for the check for abandoned carts: On what schedule should the cart collection be checked for abandoned carts? You can provide this in [App Engine cron.yaml syntax](https://cloud.google.com/appengine/docs/standard/python/config/cronref).
 
 
 
@@ -137,7 +137,7 @@ Usage of this extension also requires you to have a [Twilio SendGrid account](ht
 
 * **processCartUpdate:** Processes changes to documents in the collection that represent a shopping cart, adding metadata about the document, specifically a last updated field that can be used to determine whether the cart has been abandoned.
 
-* **processCartCheck:** undefined
+* **processCartCheck:** Runs periodically to check any carts that have been abandoned. If they have adds the details from the cart to the email collection so that an email can be sent out.
 
 
 

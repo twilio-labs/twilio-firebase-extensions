@@ -67,13 +67,13 @@ Usage of this extension also requires you to have a [Twilio account](https://www
 
 * Cloud Functions location: Where do you want to deploy the functions created for this extension? You usually want a location close to your database. For help selecting a location, refer to the [location selection guide](https://firebase.google.com/docs/functions/locations).
 
-* Twilio Account Sid: Your Twilio Account Sid, which you can find in your Twilio console.
+* Twilio Account Sid: What is your Twilio Account Sid? You can find in in your Twilio console.
 
-* Twilio Auth Token: Your Twilio Auth Token, which you can find in your Twilio console.
+* Twilio Auth Token: What is your Twilio Auth Token? You can find it in your Twilio console.
 
-* Twilio phone number: A Twilio phone number you want to use to send messages. In e.164 format. If you provide a Messaging Service Sid as well, the messaging service will be preferred.
+* Twilio phone number: What is the Twilio phone number you want to use to send messages? Please enter it in e.164 format. If you provide a Messaging Service Sid as well, the messaging service will be preferred.
 
-* Twilio Messaging Service Sid: A Sid of a Twilio Messaging Service that you want to use to send messages. If you provide a Twilio phone number as well, the messaging service will be preferred.
+* Twilio Messaging Service Sid: What is the Twilio Messaging Service Sid that you want to use to send messages? If you provide a Twilio phone number as well, the messaging service will be preferred.
 
 * Message documents collection: What is the path to the collection that contains the documents used to build and send the messages?
 
