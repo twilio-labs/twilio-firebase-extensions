@@ -58,12 +58,15 @@ resources:
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:CART_COLLECTION}/{id}
   - name: processCartCheck
     type: firebaseextensions.v1beta.function
+    description: >-
+      Runs periodically to check any carts that have been abandoned. If they
+      have adds the details from the cart to the email collection so that an
+      email can be sent out.
     properties:
       location: ${param:LOCATION}
       runtime: nodejs14
-      # scheduleTrigger:
-      #   schedule: ${param:CART_CHECK_INTERVAL}
-      httpsTrigger: {}
+      scheduleTrigger:
+        schedule: ${param:CART_CHECK_INTERVAL}
 
 params:
   - param: LOCATION
@@ -124,7 +127,7 @@ params:
   - param: SENDGRID_API_KEY
     label: SendGrid API Key
     description: >-
-      A SendGrid API key with permission to add contacts to the marketing campaign
+      What is your SendGrid API key? Make sure it has permission to send emails.
     type: secret
     example: SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     validationRegex: ^SG\.[a-zA-Z0-9\.\-_]+$
@@ -143,33 +146,33 @@ params:
 
   - param: DEFAULT_FROM
     label: Default from email address
-    description: The default email address to send the emails from
+    description: What is the default email address to send the emails from?
     type: string
     required: true
 
   - param: DEFAULT_REPLY_TO
     label: Default email to set as reply-to
-    description: The default email address to set as the email reply-to field
+    description: What is the default email address to set as the email reply-to field?
     type: string
     required: false
 
   - param: DEFAULT_TEMPLATE_ID
     label: Default email dynamic template ID
-    description: The SendGrid Dynamic Template ID that you want to use by default
+    description: What is the SendGrid Dynamic Template ID that you want to use by default
     type: string
     required: true
 
   - param: CART_COLLECTION
     label: The collection your shopping cart is stored in
     description: >-
-      This is the collection that this extension should observe in order to calculate whether a cart has been abandoned.
+      What is is the collection that this extension should observe in order to calculate whether a cart has been abandoned?
     type: string
     required: true
 
   - param: ABANDONED_TIMEOUT
     label: Time in minutes
     description: >-
-      The amount of time in minutes a cart is inactive before this extension will send them an email
+      What is the amount of time in minutes a cart is inactive before this extension will send them an email?
     type: string
     default: "180"
     example: "180"
@@ -178,9 +181,9 @@ params:
     required: true
 
   - param: CART_CHECK_INTERVAL
-    label: Time in minutes between checks for abandoned carts
+    label: Schedule for the check for abandoned carts
     description: >-
-      The amount of time in minutes between each check for abandoned carts.
+      On what schedule should the cart collection be checked for abandoned carts? You can provide this in [App Engine cron.yaml syntax](https://cloud.google.com/appengine/docs/standard/python/config/cronref).
     type: string
     default: "every 5 minutes"
     example: "every 5 minutes"

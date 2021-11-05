@@ -110,7 +110,7 @@ params:
   - param: TWILIO_ACCOUNT_SID
     label: Twilio Account Sid
     description: >-
-      Your Twilio Account Sid, which you can find in your Twilio console.
+      What is your Twilio Account Sid? You can find in in your Twilio console.
     type: string
     example: ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     validationRegex: ^AC[a-f0-9]{32}$
@@ -121,7 +121,7 @@ params:
     label: Twilio Auth Token
     type: secret
     description: >-
-      Your Twilio Auth Token, which you can find in your Twilio console.
+      What is your Twilio Auth Token? You can find it in your Twilio console.
     example: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     validationRegex: ^[a-f0-9]{32}$
     validationErrorMessage: Invalid Auth Token. Must be 32 characters long and made of letters and digits.
@@ -130,7 +130,7 @@ params:
   - param: TWILIO_PHONE_NUMBER
     label: Twilio phone number
     description: >-
-      A Twilio phone number you want to use to send messages. In e.164 format. If you provide a Messaging Service Sid as well, the messaging service will be preferred.
+      What is the Twilio phone number you want to use to send messages? Please enter it in e.164 format. If you provide a Messaging Service Sid as well, the messaging service will be preferred.
     type: string
     example: +15551231234
     required: false
@@ -138,7 +138,7 @@ params:
   - param: TWILIO_MESSAGING_SERVICE_SID
     label: Twilio Messaging Service Sid
     description: >-
-      A Sid of a Twilio Messaging Service that you want to use to send messages. If you provide a Twilio phone number as well, the messaging service will be preferred.
+      What is the Twilio Messaging Service Sid that you want to use to send messages? If you provide a Twilio phone number as well, the messaging service will be preferred.
     example: MGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     type: string
     validationRegex: ^MG[a-f0-9]{32}$

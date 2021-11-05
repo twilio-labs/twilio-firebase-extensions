@@ -101,7 +101,7 @@ params:
   - param: SENDGRID_API_KEY
     label: SendGrid API Key
     description: >-
-      A SendGrid API key with permission to add contacts to the marketing campaign
+      What is your SendGrid API key? It needs to have permission to add contacts to the marketing campaign.
     type: secret
     example: SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     validationRegex: ^SG\.[a-zA-Z0-9\.\-_]+$
