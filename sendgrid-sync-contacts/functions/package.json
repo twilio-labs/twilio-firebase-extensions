@@ -1,6 +1,6 @@
 {
   "name": "sendgrid-sync-contacts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Add and remove contacts to your email list in SendGrid Marketing Campaigns by adding documents to a Firestore collection",
   "main": "lib/index.js",
   "scripts": {

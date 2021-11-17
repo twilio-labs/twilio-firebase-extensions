@@ -1,5 +1,5 @@
 name: sendgrid-sync-contacts
-version: 0.1.0
+version: 0.1.1
 specVersion: v1beta
 
 displayName: Sync Contacts with SendGrid
@@ -104,8 +104,8 @@ params:
       What is your SendGrid API key? It needs to have permission to add contacts to the marketing campaign.
     type: secret
     example: SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    validationRegex: ^SG\.[a-zA-Z0-9\.\-_]+$
-    validationErrorMessage: Invalid SendGrid API Key. Must be in the form `SG.xxx`.
+    # validationRegex: ^SG\.[a-zA-Z0-9\.\-_]+$
+    # validationErrorMessage: Invalid SendGrid API Key. Must be in the form `SG.xxx`.
     required: true
 
   - param: CONTACTS_COLLECTION

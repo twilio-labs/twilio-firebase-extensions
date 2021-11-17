@@ -1,5 +1,5 @@
 name: send-message
-version: 0.1.0
+version: 0.1.1
 specVersion: v1beta
 
 displayName: Send Messages with Twilio
@@ -123,8 +123,8 @@ params:
     description: >-
       What is your Twilio Auth Token? You can find it in your Twilio console.
     example: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-    validationRegex: ^[a-f0-9]{32}$
-    validationErrorMessage: Invalid Auth Token. Must be 32 characters long and made of letters and digits.
+    # validationRegex: ^[a-f0-9]{32}$
+    # validationErrorMessage: Invalid Auth Token. Must be 32 characters long and made of letters and digits.
     required: true
 
   - param: TWILIO_PHONE_NUMBER
