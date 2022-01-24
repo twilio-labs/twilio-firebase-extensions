@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import { initializeApp } from "firebase-admin";
 import config from "./config";
 import { Client as SendGridClient } from "@sendgrid/client";
 import { APP_VERSION } from "./version";
@@ -11,7 +11,7 @@ export function initialize(): void {
     return;
   }
   if (config.sendgrid.apiKey) {
-    admin.initializeApp();
+    initializeApp();
     sendGridClient = new SendGridClient();
     sendGridClient.setApiKey(config.sendgrid.apiKey);
     // @ts-ignore The client has a defaultHeaders property, it just isn't exposed in the types

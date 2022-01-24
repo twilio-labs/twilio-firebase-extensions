@@ -1,30 +1,11 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.processQueue = void 0;
-const admin = __importStar(require("firebase-admin"));
-const functions = __importStar(require("firebase-functions"));
+const firebase_admin_1 = require("firebase-admin");
+const firebase_functions_1 = require("firebase-functions");
 const lodash_isequal_1 = __importDefault(require("lodash.isequal"));
 const utils_1 = require("./utils");
 const sendgrid_1 = require("./sendgrid");
@@ -65,9 +46,7 @@ async function createSendGridContact(opts) {
 async function startUpdate(snapshot) {
     // In a transaction, store a meta object that logs the time it was
     // updated and the initial state, PENDING.
-    return admin
-        .firestore()
-        .runTransaction((transaction) => {
+    return (0, firebase_admin_1.firestore)().runTransaction((transaction) => {
         transaction.update(snapshot.ref, { meta: { state: "PENDING" } });
         return Promise.resolve();
     });
@@ -80,16 +59,16 @@ async function processDelete(snapshot) {
             return (0, sendgrid_1.deleteContact)(id);
         }
         else {
-            functions.logger.error("Cannot delete email that isn't present in the contacts list.");
+            firebase_functions_1.logger.error("Cannot delete email that isn't present in the contacts list.");
             return;
         }
     }
     catch (error) {
         if (error instanceof Error) {
-            functions.logger.error(error.message);
+            firebase_functions_1.logger.error(error.message);
         }
         else {
-            functions.logger.error(`Unknown error: ${String(error)}`);
+            firebase_functions_1.logger.error(`Unknown error: ${String(error)}`);
         }
         return;
     }
@@ -108,7 +87,7 @@ async function processWrite(change) {
     if (!payload.meta) {
         // Document does not have a delivery object so something has gone wrong.
         // Log and exit.
-        functions.logger.error(`contact=${change.after.ref} is missing 'meta' field`);
+        firebase_functions_1.logger.error(`contact=${change.after.ref} is missing 'meta' field`);
         return;
     }
     switch (payload.meta.state) {
@@ -129,7 +108,7 @@ async function processWrite(change) {
             return;
         case "PENDING":
             const result = await createSendGridContact(payload);
-            return admin.firestore().runTransaction((transaction) => {
+            return (0, firebase_admin_1.firestore)().runTransaction((transaction) => {
                 transaction.update(change.after.ref, {
                     meta: result,
                 });
@@ -137,16 +116,16 @@ async function processWrite(change) {
             });
     }
 }
-exports.processQueue = functions.handler.firestore.document.onWrite(async (change) => {
+exports.processQueue = firebase_functions_1.handler.firestore.document.onWrite(async (change) => {
     // Initialize Firebase and SendGrid clients
     (0, utils_1.initialize)();
     try {
         await processWrite(change);
     }
     catch (error) {
-        functions.logger.error(error);
+        firebase_functions_1.logger.error(error);
         return;
     }
-    functions.logger.log("Completed execution of SendGrid Marketing Campaigns sync extension.");
+    firebase_functions_1.logger.log("Completed execution of SendGrid Marketing Campaigns sync extension.");
 });
 //# sourceMappingURL=processQueue.js.map

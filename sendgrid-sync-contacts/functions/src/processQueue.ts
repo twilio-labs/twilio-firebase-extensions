@@ -1,5 +1,10 @@
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import { firestore as adminFirestore } from "firebase-admin";
+import {
+  handler,
+  logger,
+  Change,
+  firestore as functionsFirestore,
+} from "firebase-functions";
 import isEqual from "lodash.isequal";
 import { initialize } from "./utils";
 import { createContact, deleteContact, getContactId } from "./sendgrid";
@@ -39,20 +44,20 @@ async function createSendGridContact(opts: UserInput<ContactData>) {
 }
 
 async function startUpdate(
-  snapshot: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>
+  snapshot: adminFirestore.DocumentSnapshot<adminFirestore.DocumentData>
 ) {
   // In a transaction, store a meta object that logs the time it was
   // updated and the initial state, PENDING.
-  return admin
-    .firestore()
-    .runTransaction((transaction: admin.firestore.Transaction) => {
+  return adminFirestore().runTransaction(
+    (transaction: adminFirestore.Transaction) => {
       transaction.update(snapshot.ref, { meta: { state: "PENDING" } });
       return Promise.resolve();
-    });
+    }
+  );
 }
 
 async function processDelete(
-  snapshot: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>
+  snapshot: adminFirestore.DocumentSnapshot<adminFirestore.DocumentData>
 ) {
   const contact = snapshot.data() as UserInput<ContactData>;
   try {
@@ -60,23 +65,23 @@ async function processDelete(
     if (id) {
       return deleteContact(id);
     } else {
-      functions.logger.error(
+      logger.error(
         "Cannot delete email that isn't present in the contacts list."
       );
       return;
     }
   } catch (error) {
     if (error instanceof Error) {
-      functions.logger.error(error.message);
+      logger.error(error.message);
     } else {
-      functions.logger.error(`Unknown error: ${String(error)}`);
+      logger.error(`Unknown error: ${String(error)}`);
     }
     return;
   }
 }
 
 async function processWrite(
-  change: functions.Change<functions.firestore.DocumentSnapshot>
+  change: Change<functionsFirestore.DocumentSnapshot>
 ) {
   if (!change.after.exists) {
     // Document has been deleted, remove from the contacts list
@@ -93,9 +98,7 @@ async function processWrite(
   if (!payload.meta) {
     // Document does not have a delivery object so something has gone wrong.
     // Log and exit.
-    functions.logger.error(
-      `contact=${change.after.ref} is missing 'meta' field`
-    );
+    logger.error(`contact=${change.after.ref} is missing 'meta' field`);
     return;
   }
 
@@ -117,7 +120,7 @@ async function processWrite(
       return;
     case "PENDING":
       const result = await createSendGridContact(payload);
-      return admin.firestore().runTransaction((transaction) => {
+      return adminFirestore().runTransaction((transaction) => {
         transaction.update(change.after.ref, {
           meta: result,
         });
@@ -126,17 +129,17 @@ async function processWrite(
   }
 }
 
-export const processQueue = functions.handler.firestore.document.onWrite(
-  async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
+export const processQueue = handler.firestore.document.onWrite(
+  async (change: Change<functionsFirestore.DocumentSnapshot>) => {
     // Initialize Firebase and SendGrid clients
     initialize();
     try {
       await processWrite(change);
     } catch (error) {
-      functions.logger.error(error);
+      logger.error(error);
       return;
     }
-    functions.logger.log(
+    logger.log(
       "Completed execution of SendGrid Marketing Campaigns sync extension."
     );
   }

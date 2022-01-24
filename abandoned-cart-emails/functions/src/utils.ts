@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import { initializeApp } from "firebase-admin";
 import config from "./config";
 import { Client as SendGridClient } from "@sendgrid/client";
 import { MailService } from "@sendgrid/mail";
@@ -12,7 +12,7 @@ export function initialize(): void {
     return;
   }
   if (config.sendgrid.apiKey) {
-    admin.initializeApp();
+    initializeApp();
     const httpClient = new SendGridClient();
     // @ts-ignore The client has a defaultHeaders property, it just isn't exposed in the types
     const oldUserAgent = httpClient.defaultHeaders["User-Agent"];

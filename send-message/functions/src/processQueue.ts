@@ -1,16 +1,21 @@
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import { firestore as adminFirestore } from "firebase-admin";
+import {
+  logger,
+  Change,
+  handler,
+  firestore as functionsFirestore,
+} from "firebase-functions";
 import { QueuePayload } from "./types";
 import config from "./config";
 import { initialize, twilioClient, getFunctionsUrl } from "./utils";
 
 async function deliverMessage(
   payload: QueuePayload,
-  ref: admin.firestore.DocumentReference
+  ref: adminFirestore.DocumentReference
 ): Promise<void> {
-  functions.logger.log(`Attempting delivery for message: ${ref.path}`);
+  logger.log(`Attempting delivery for message: ${ref.path}`);
   const update = {
-    "delivery.endTime": admin.firestore.FieldValue.serverTimestamp(),
+    "delivery.endTime": adminFirestore.FieldValue.serverTimestamp(),
     "delivery.leaseExpireTime": null,
     "delivery.state": "SUCCESS",
     "delivery.info": {},
@@ -35,13 +40,13 @@ async function deliverMessage(
       messageSid: message.sid,
       status: message.status,
       dateCreated: message.dateCreated
-        ? admin.firestore.Timestamp.fromDate(message.dateCreated)
+        ? adminFirestore.Timestamp.fromDate(message.dateCreated)
         : null,
       dateSent: message.dateSent
-        ? admin.firestore.Timestamp.fromDate(message.dateSent)
+        ? adminFirestore.Timestamp.fromDate(message.dateSent)
         : null,
       dateUpdated: message.dateUpdated
-        ? admin.firestore.Timestamp.fromDate(message.dateUpdated)
+        ? adminFirestore.Timestamp.fromDate(message.dateUpdated)
         : null,
       messagingServiceSid: message.messagingServiceSid,
       numMedia: message.numMedia,
@@ -49,36 +54,35 @@ async function deliverMessage(
     };
     update["delivery.state"] = "SUCCESS";
     update["delivery.info"] = info;
-    functions.logger.log(
+    logger.log(
       `Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`
     );
   } catch (error: any) {
     update["delivery.state"] = "ERROR";
     update["delivery.errorCode"] = error.code.toString();
     update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
-    functions.logger.error(
+    logger.error(
       `Error when delivering message: ${ref.path}: ${error.toString()}`
     );
   }
 
-  return admin.firestore().runTransaction((transaction) => {
+  return adminFirestore().runTransaction((transaction) => {
     transaction.update(ref, update);
     return Promise.resolve();
   });
 }
 
 function processCreate(
-  snapshot: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>
+  snapshot: adminFirestore.DocumentSnapshot<adminFirestore.DocumentData>
 ) {
   // In a transaction, store a delivery object that logs the time it was
   // updated, the initial state (PENDING), and empty properties for info about
   // the message or error codes and messages.
-  return admin
-    .firestore()
-    .runTransaction((transaction: admin.firestore.Transaction) => {
+  return adminFirestore().runTransaction(
+    (transaction: adminFirestore.Transaction) => {
       transaction.update(snapshot.ref, {
         delivery: {
-          startTime: admin.firestore.FieldValue.serverTimestamp(),
+          startTime: adminFirestore.FieldValue.serverTimestamp(),
           state: "PENDING",
           errorCode: null,
           errorMessage: null,
@@ -86,13 +90,14 @@ function processCreate(
         },
       });
       return Promise.resolve();
-    });
+    }
+  );
 }
 
 // This method is called by `processQueue` when a document is added to the
 // collection, updated, or deleted.
 async function processWrite(
-  change: functions.Change<functions.firestore.DocumentSnapshot>
+  change: Change<functionsFirestore.DocumentSnapshot>
 ): Promise<void> {
   if (!change.after.exists) {
     // Document has been deleted, nothing to do here.
@@ -111,9 +116,7 @@ async function processWrite(
   if (!payload.delivery) {
     // Document does not have a delivery object so something has gone wrong.
     // Log and exit.
-    functions.logger.error(
-      `message=${change.after.ref} is missing 'delivery' field`
-    );
+    logger.error(`message=${change.after.ref} is missing 'delivery' field`);
     return;
   }
 
@@ -128,7 +131,7 @@ async function processWrite(
         payload.delivery.leaseExpireTime.toMillis() < Date.now()
       ) {
         // It has taken too long to process the message, mark it as an error.
-        return admin.firestore().runTransaction((transaction) => {
+        return adminFirestore().runTransaction((transaction) => {
           transaction.update(change.after.ref, {
             "delivery.state": "ERROR",
             errorMessage: "Message processing lease expired.",
@@ -140,10 +143,10 @@ async function processWrite(
     case "PENDING":
       // Update the message to the processing state and give it 60 seconds to
       // run. Then call the deliver function.
-      await admin.firestore().runTransaction((transaction) => {
+      await adminFirestore().runTransaction((transaction) => {
         transaction.update(change.after.ref, {
           "delivery.state": "PROCESSING",
-          "delivery.leaseExpireTime": admin.firestore.Timestamp.fromMillis(
+          "delivery.leaseExpireTime": adminFirestore.Timestamp.fromMillis(
             Date.now() + 60000
           ),
         });
@@ -153,18 +156,16 @@ async function processWrite(
   }
 }
 
-export const processQueue = functions.handler.firestore.document.onWrite(
-  async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
+export const processQueue = handler.firestore.document.onWrite(
+  async (change: Change<functionsFirestore.DocumentSnapshot>) => {
     // Initialize Firebase and Twilio clients
     initialize();
     try {
       await processWrite(change);
     } catch (error) {
-      functions.logger.error(error);
+      logger.error(error);
       return;
     }
-    functions.logger.log(
-      "Completed execution of Twilio send message extension."
-    );
+    logger.log("Completed execution of Twilio send message extension.");
   }
 );
