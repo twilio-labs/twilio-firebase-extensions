@@ -10,7 +10,8 @@
     "compile": "tsc",
     "build": "npm run clean && npm run compile",
     "watch": "tsc --watch",
-    "generate-readme": "firebase ext:info .. --markdown > ../README.md"
+    "generate-readme": "firebase ext:info .. --markdown > ../README.md",
+    "firebase:publish": "firebase ext:dev:publish twilio/abandoned-cart-emails"
   },
   "keywords": [
     "twilio",
