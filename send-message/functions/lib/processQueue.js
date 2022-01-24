@@ -48,13 +48,13 @@ async function deliverMessage(payload, ref) {
         };
         update["delivery.state"] = "SUCCESS";
         update["delivery.info"] = info;
-        firebase_functions_1.logger.log(`Delivered message: ${String(ref.path)} successfully. MessageSid: ${info.messageSid}`);
+        firebase_functions_1.logger.log(`Delivered message: ${String(ref.path)} successfully. MessageSid: ${String(info.messageSid)}`);
     }
     catch (error) {
         update["delivery.state"] = "ERROR";
         update["delivery.errorCode"] = error.code.toString();
         update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
-        firebase_functions_1.logger.error(`Error when delivering message: ${String(ref.path)}: ${error.toString()}`);
+        firebase_functions_1.logger.error(`Error when delivering message: ${String(ref.path)}: ${String(error)}`);
     }
     return (0, firebase_admin_1.firestore)().runTransaction((transaction) => {
         transaction.update(ref, update);

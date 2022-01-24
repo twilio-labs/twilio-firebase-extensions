@@ -55,16 +55,16 @@ async function deliverMessage(
     update["delivery.state"] = "SUCCESS";
     update["delivery.info"] = info;
     logger.log(
-      `Delivered message: ${String(ref.path)} successfully. MessageSid: ${
-        info.messageSid
-      }`
+      `Delivered message: ${String(
+        ref.path
+      )} successfully. MessageSid: ${String(info.messageSid)}`
     );
   } catch (error: any) {
     update["delivery.state"] = "ERROR";
     update["delivery.errorCode"] = error.code.toString();
     update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
     logger.error(
-      `Error when delivering message: ${String(ref.path)}: ${error.toString()}`
+      `Error when delivering message: ${String(ref.path)}: ${String(error)}`
     );
   }
 
