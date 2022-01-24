@@ -34,8 +34,16 @@ export const statusCallback = handler.https.onRequest(async (req, res) => {
       .status(403)
       .send("Twilio Request Validation Failed");
   }
-  const firestore = adminFirestore();
   const { MessageSid, MessageStatus } = req.body;
+
+  if (typeof MessageSid !== "string") {
+    return res
+      .type("text/plain")
+      .status(400)
+      .send("Webhook error - No MessageSid found.");
+  }
+
+  const firestore = adminFirestore();
   const collection = firestore.collection(config.messageCollection);
   logger.log(`Attempting status update for message: ${MessageSid}`);
 

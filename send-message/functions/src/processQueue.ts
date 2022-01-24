@@ -116,7 +116,9 @@ async function processWrite(
   if (!payload.delivery) {
     // Document does not have a delivery object so something has gone wrong.
     // Log and exit.
-    logger.error(`message=${change.after.ref} is missing 'delivery' field`);
+    logger.error(
+      `message=${change.after.ref.path} is missing 'delivery' field`
+    );
     return;
   }
 

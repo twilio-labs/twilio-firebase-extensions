@@ -98,7 +98,7 @@ async function processWrite(
   if (!payload.meta) {
     // Document does not have a delivery object so something has gone wrong.
     // Log and exit.
-    logger.error(`contact=${change.after.ref} is missing 'meta' field`);
+    logger.error(`contact=${change.after.ref.path} is missing 'meta' field`);
     return;
   }
 
