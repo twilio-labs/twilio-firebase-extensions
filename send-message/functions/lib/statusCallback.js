@@ -33,8 +33,14 @@ exports.statusCallback = firebase_functions_1.handler.https.onRequest(async (req
             .status(403)
             .send("Twilio Request Validation Failed");
     }
-    const firestore = (0, firebase_admin_1.firestore)();
     const { MessageSid, MessageStatus } = req.body;
+    if (typeof MessageSid !== "string") {
+        return res
+            .type("text/plain")
+            .status(400)
+            .send("Webhook error - No MessageSid found.");
+    }
+    const firestore = (0, firebase_admin_1.firestore)();
     const collection = firestore.collection(config_1.default.messageCollection);
     firebase_functions_1.logger.log(`Attempting status update for message: ${MessageSid}`);
     try {
@@ -47,7 +53,7 @@ exports.statusCallback = firebase_functions_1.handler.https.onRequest(async (req
         }
         else {
             const ref = query.docs[0].ref;
-            firebase_functions_1.logger.log(`Found document for message ${MessageSid} with ref ${ref.path}`);
+            firebase_functions_1.logger.log(`Found document for message ${MessageSid} with ref ${String(ref.path)}`);
             await (0, firebase_admin_1.firestore)().runTransaction((transaction) => {
                 transaction.update(ref, "delivery.info.status", MessageStatus);
                 return Promise.resolve();

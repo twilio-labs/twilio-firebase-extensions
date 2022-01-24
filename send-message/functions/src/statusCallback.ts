@@ -59,7 +59,7 @@ export const statusCallback = handler.https.onRequest(async (req, res) => {
     } else {
       const ref = query.docs[0].ref;
       logger.log(
-        `Found document for message ${MessageSid} with ref ${ref.path}`
+        `Found document for message ${MessageSid} with ref ${String(ref.path)}`
       );
       await adminFirestore().runTransaction((transaction) => {
         transaction.update(ref, "delivery.info.status", MessageStatus);

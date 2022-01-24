@@ -87,7 +87,7 @@ async function processWrite(change) {
     if (!payload.meta) {
         // Document does not have a delivery object so something has gone wrong.
         // Log and exit.
-        firebase_functions_1.logger.error(`contact=${change.after.ref} is missing 'meta' field`);
+        firebase_functions_1.logger.error(`contact=${String(change.after.ref.path)} is missing 'meta' field`);
         return;
     }
     switch (payload.meta.state) {

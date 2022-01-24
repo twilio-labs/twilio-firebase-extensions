@@ -9,7 +9,7 @@ const firebase_functions_1 = require("firebase-functions");
 const utils_1 = require("./utils");
 const config_1 = __importDefault(require("./config"));
 const MS_PER_MINUTE = 60000;
-exports.processCartCheck = firebase_functions_1.handler.pubsub.schedule.onRun(async (context) => {
+exports.processCartCheck = firebase_functions_1.handler.pubsub.schedule.onRun(async () => {
     (0, utils_1.initialize)();
     const firestore = (0, firebase_admin_1.firestore)();
     const collection = firestore.collection(config_1.default.cartCollection);

@@ -13,7 +13,7 @@ async function deliverMessage(
   payload: QueuePayload,
   ref: adminFirestore.DocumentReference
 ): Promise<void> {
-  logger.log(`Attempting delivery for message: ${ref.path}`);
+  logger.log(`Attempting delivery for message: ${String(ref.path)}`);
   const update = {
     "delivery.endTime": adminFirestore.FieldValue.serverTimestamp(),
     "delivery.leaseExpireTime": null,
@@ -55,14 +55,16 @@ async function deliverMessage(
     update["delivery.state"] = "SUCCESS";
     update["delivery.info"] = info;
     logger.log(
-      `Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`
+      `Delivered message: ${String(ref.path)} successfully. MessageSid: ${
+        info.messageSid
+      }`
     );
   } catch (error: any) {
     update["delivery.state"] = "ERROR";
     update["delivery.errorCode"] = error.code.toString();
     update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
     logger.error(
-      `Error when delivering message: ${ref.path}: ${error.toString()}`
+      `Error when delivering message: ${String(ref.path)}: ${error.toString()}`
     );
   }
 
@@ -117,7 +119,7 @@ async function processWrite(
     // Document does not have a delivery object so something has gone wrong.
     // Log and exit.
     logger.error(
-      `message=${change.after.ref.path} is missing 'delivery' field`
+      `message=${String(change.after.ref.path)} is missing 'delivery' field`
     );
     return;
   }

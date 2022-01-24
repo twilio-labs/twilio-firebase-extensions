@@ -9,7 +9,7 @@ const firebase_functions_1 = require("firebase-functions");
 const config_1 = __importDefault(require("./config"));
 const utils_1 = require("./utils");
 async function deliverMessage(payload, ref) {
-    firebase_functions_1.logger.log(`Attempting delivery for message: ${ref.path}`);
+    firebase_functions_1.logger.log(`Attempting delivery for message: ${String(ref.path)}`);
     const update = {
         "delivery.endTime": firebase_admin_1.firestore.FieldValue.serverTimestamp(),
         "delivery.leaseExpireTime": null,
@@ -48,7 +48,7 @@ async function deliverMessage(payload, ref) {
                     responseError.response.body &&
                     responseError.response.body.errors) {
                     update["delivery.errors"] = responseError.response.body.errors;
-                    firebase_functions_1.logger.error(`Error when sending email: ${ref.path}: ${error.toString()}`);
+                    firebase_functions_1.logger.error(`Error when sending email: ${String(ref.path)}: ${error.toString()}`);
                 }
             }
         }
@@ -91,7 +91,7 @@ async function processWrite(change) {
     if (!payload.delivery) {
         // Document does not have a delivery object so something has gone wrong.
         // Log and exit.
-        firebase_functions_1.logger.error(`message=${change.after.ref} is missing 'delivery' field`);
+        firebase_functions_1.logger.error(`message=${String(change.after.ref.path)} is missing 'delivery' field`);
         return;
     }
     switch (payload.delivery.state) {

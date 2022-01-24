@@ -9,7 +9,7 @@ const firebase_functions_1 = require("firebase-functions");
 const config_1 = __importDefault(require("./config"));
 const utils_1 = require("./utils");
 async function deliverMessage(payload, ref) {
-    firebase_functions_1.logger.log(`Attempting delivery for message: ${ref.path}`);
+    firebase_functions_1.logger.log(`Attempting delivery for message: ${String(ref.path)}`);
     const update = {
         "delivery.endTime": firebase_admin_1.firestore.FieldValue.serverTimestamp(),
         "delivery.leaseExpireTime": null,
@@ -48,13 +48,13 @@ async function deliverMessage(payload, ref) {
         };
         update["delivery.state"] = "SUCCESS";
         update["delivery.info"] = info;
-        firebase_functions_1.logger.log(`Delivered message: ${ref.path} successfully. MessageSid: ${info.messageSid}`);
+        firebase_functions_1.logger.log(`Delivered message: ${String(ref.path)} successfully. MessageSid: ${info.messageSid}`);
     }
     catch (error) {
         update["delivery.state"] = "ERROR";
         update["delivery.errorCode"] = error.code.toString();
         update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
-        firebase_functions_1.logger.error(`Error when delivering message: ${ref.path}: ${error.toString()}`);
+        firebase_functions_1.logger.error(`Error when delivering message: ${String(ref.path)}: ${error.toString()}`);
     }
     return (0, firebase_admin_1.firestore)().runTransaction((transaction) => {
         transaction.update(ref, update);
@@ -95,7 +95,7 @@ async function processWrite(change) {
     if (!payload.delivery) {
         // Document does not have a delivery object so something has gone wrong.
         // Log and exit.
-        firebase_functions_1.logger.error(`message=${change.after.ref} is missing 'delivery' field`);
+        firebase_functions_1.logger.error(`message=${String(change.after.ref.path)} is missing 'delivery' field`);
         return;
     }
     switch (payload.delivery.state) {
