@@ -1,4 +1,4 @@
-import * as admin from "firebase-admin";
+import { initializeApp } from "firebase-admin";
 import { Twilio } from "twilio";
 
 import { APP_VERSION } from "./version";
@@ -13,7 +13,7 @@ export function initialize(): void {
     return;
   }
   if (config.twilio.accountSid && config.twilio.authToken) {
-    admin.initializeApp();
+    initializeApp();
     twilioClient = new Twilio(
       config.twilio.accountSid,
       config.twilio.authToken,

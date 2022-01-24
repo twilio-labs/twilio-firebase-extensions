@@ -1,29 +1,10 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.hasOwnProperty = exports.initialize = exports.sendGridClient = void 0;
-const admin = __importStar(require("firebase-admin"));
+const firebase_admin_1 = require("firebase-admin");
 const config_1 = __importDefault(require("./config"));
 const client_1 = require("@sendgrid/client");
 const version_1 = require("./version");
@@ -33,7 +14,7 @@ function initialize() {
         return;
     }
     if (config_1.default.sendgrid.apiKey) {
-        admin.initializeApp();
+        (0, firebase_admin_1.initializeApp)();
         exports.sendGridClient = new client_1.Client();
         exports.sendGridClient.setApiKey(config_1.default.sendgrid.apiKey);
         // @ts-ignore The client has a defaultHeaders property, it just isn't exposed in the types

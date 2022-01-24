@@ -1,5 +1,10 @@
-import * as admin from "firebase-admin";
-import * as functions from "firebase-functions";
+import { firestore as adminFirestore } from "firebase-admin";
+import {
+  Change,
+  handler,
+  logger,
+  firestore as functionsFirestore,
+} from "firebase-functions";
 import isEqual from "lodash.isequal";
 import { initialize } from "./utils";
 import { CartDocument } from "./types";
@@ -13,7 +18,7 @@ type MetadataUpdate = {
 };
 
 function updateLastUpdated(
-  snapshot: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>
+  snapshot: adminFirestore.DocumentSnapshot<adminFirestore.DocumentData>
 ) {
   const payload = snapshot.data();
   let update: MetadataUpdate;
@@ -21,28 +26,28 @@ function updateLastUpdated(
     update = {
       metadata: {
         ...payload.metadata,
-        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+        lastUpdated: adminFirestore.FieldValue.serverTimestamp(),
       },
     };
   } else {
     update = {
       metadata: {
-        lastUpdated: admin.firestore.FieldValue.serverTimestamp(),
+        lastUpdated: adminFirestore.FieldValue.serverTimestamp(),
         emailSent: false,
         error: "",
       },
     };
   }
-  return admin
-    .firestore()
-    .runTransaction((transaction: admin.firestore.Transaction) => {
+  return adminFirestore().runTransaction(
+    (transaction: adminFirestore.Transaction) => {
       transaction.update(snapshot.ref, update);
       return Promise.resolve();
-    });
+    }
+  );
 }
 
 function processCreate(
-  snapshot: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>
+  snapshot: adminFirestore.DocumentSnapshot<adminFirestore.DocumentData>
 ): Promise<void> {
   // In a transaction, store a metadata object that logs the time it was
   // updated
@@ -50,7 +55,7 @@ function processCreate(
 }
 
 async function processWrite(
-  change: functions.Change<functions.firestore.DocumentSnapshot>
+  change: Change<functionsFirestore.DocumentSnapshot>
 ): Promise<void> {
   if (!change.after.exists) {
     // Document has been deleted, nothing to do here.
@@ -74,16 +79,16 @@ async function processWrite(
   }
 }
 
-export const processCartUpdate = functions.handler.firestore.document.onWrite(
-  async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
+export const processCartUpdate = handler.firestore.document.onWrite(
+  async (change: Change<functionsFirestore.DocumentSnapshot>) => {
     // Initialize Firebase and Twilio clients
     initialize();
     try {
       await processWrite(change);
     } catch (error) {
-      functions.logger.error(error);
+      logger.error(error);
       return;
     }
-    functions.logger.log("Completed execution of Abandoned Cart updates.");
+    logger.log("Completed execution of Abandoned Cart updates.");
   }
 );
