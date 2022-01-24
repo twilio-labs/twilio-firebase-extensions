@@ -41,11 +41,12 @@ async function deliverMessage(payload, ref) {
         const from = payload.from ||
             config_1.default.twilio.messagingServiceSid ||
             config_1.default.twilio.phoneNumber;
-        const { to, body } = payload;
+        const { to, body, mediaUrls } = payload;
         const message = await utils_1.twilioClient.messages.create({
             from,
             to,
             body,
+            mediaUrl: mediaUrls,
             statusCallback: (0, utils_1.getFunctionsUrl)("statusCallback"),
         });
         const info = {
