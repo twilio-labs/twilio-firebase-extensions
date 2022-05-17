@@ -33,7 +33,7 @@ async function deliverMessage(
       from,
       to,
       body,
-      MediaUrl: mediaUrl,
+      mediaUrl,
       statusCallback: getFunctionsUrl("statusCallback"),
     });
     const info = {
