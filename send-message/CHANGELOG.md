@@ -1,3 +1,8 @@
+## Version 0.2.0
+
+fixed - handles out of order status callback webhooks
+fixed - `mediaUrl` parameter named correctly
+
 ## Version 0.1.1
 
 fixed - removed validation of Auth Token in extension.yml
