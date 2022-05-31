@@ -121,7 +121,7 @@ params:
     label: Twilio Auth Token
     type: secret
     description: >-
-      What is your Twilio Auth Token? You can find it in your Twilio console.
+      What is your Twilio Auth Token? You can find it in your Twilio console. The Auth Token is used to verify that status update webhook requests are made by Twilio.
     example: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
     # validationRegex: ^[a-f0-9]{32}$
     # validationErrorMessage: Invalid Auth Token. Must be 32 characters long and made of letters and digits.

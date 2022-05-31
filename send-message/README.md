@@ -70,7 +70,7 @@ Usage of this extension also requires you to have a [Twilio account](https://www
 
 * Twilio Account Sid: What is your Twilio Account Sid? You can find in in your Twilio console.
 
-* Twilio Auth Token: What is your Twilio Auth Token? You can find it in your Twilio console.
+* Twilio Auth Token: What is your Twilio Auth Token? You can find it in your Twilio console. The Auth Token is used to verify that status update webhook requests are made by Twilio.
 
 * Twilio phone number: What is the Twilio phone number you want to use to send messages? Please enter it in e.164 format. If you provide a Messaging Service Sid as well, the messaging service will be preferred.
 
