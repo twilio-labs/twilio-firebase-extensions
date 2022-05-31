@@ -22,14 +22,27 @@ async function deliverMessage(payload, ref) {
         const from = payload.from ||
             config_1.default.twilio.messagingServiceSid ||
             config_1.default.twilio.phoneNumber;
-        const { to, body, mediaUrl } = payload;
-        const message = await utils_1.twilioClient.messages.create({
+        const { to, body, mediaUrl, sendAt, scheduleType, smartEncoded, maxPrice } = payload;
+        const messageOptions = {
             from,
             to,
             body,
-            mediaUrl,
             statusCallback: (0, utils_1.getFunctionsUrl)("statusCallback"),
-        });
+        };
+        if (mediaUrl) {
+            messageOptions.mediaUrl = mediaUrl;
+        }
+        if (sendAt && scheduleType) {
+            messageOptions.scheduleType = scheduleType;
+            messageOptions.sendAt = sendAt.toDate();
+        }
+        if (typeof smartEncoded === "boolean") {
+            messageOptions.smartEncoded = smartEncoded;
+        }
+        if (maxPrice) {
+            messageOptions.maxPrice = maxPrice;
+        }
+        const message = await utils_1.twilioClient.messages.create(messageOptions);
         const info = {
             messageSid: message.sid,
             status: message.status,

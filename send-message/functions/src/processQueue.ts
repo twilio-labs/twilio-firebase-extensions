@@ -5,6 +5,7 @@ import {
   handler,
   firestore as functionsFirestore,
 } from "firebase-functions";
+import { MessageListInstanceCreateOptions } from "twilio/lib/rest/api/v2010/account/message";
 import { QueuePayload } from "./types";
 import config from "./config";
 import { initialize, twilioClient, getFunctionsUrl } from "./utils";
@@ -28,14 +29,28 @@ async function deliverMessage(
       payload.from ||
       config.twilio.messagingServiceSid ||
       config.twilio.phoneNumber;
-    const { to, body, mediaUrl } = payload;
-    const message = await twilioClient.messages.create({
+    const { to, body, mediaUrl, sendAt, scheduleType, smartEncoded, maxPrice } =
+      payload;
+    const messageOptions: MessageListInstanceCreateOptions = {
       from,
       to,
       body,
-      mediaUrl,
       statusCallback: getFunctionsUrl("statusCallback"),
-    });
+    };
+    if (mediaUrl) {
+      messageOptions.mediaUrl = mediaUrl;
+    }
+    if (sendAt && scheduleType) {
+      messageOptions.scheduleType = scheduleType;
+      messageOptions.sendAt = sendAt.toDate();
+    }
+    if (typeof smartEncoded === "boolean") {
+      messageOptions.smartEncoded = smartEncoded;
+    }
+    if (maxPrice) {
+      messageOptions.maxPrice = maxPrice;
+    }
+    const message = await twilioClient.messages.create(messageOptions);
     const info = {
       messageSid: message.sid,
       status: message.status,
