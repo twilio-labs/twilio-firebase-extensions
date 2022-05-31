@@ -9,6 +9,7 @@ const firebase_functions_1 = require("firebase-functions");
 const twilio_1 = require("twilio");
 const utils_1 = require("./utils");
 const config_1 = __importDefault(require("./config"));
+const terminalStatuses = ["delivered", "undelivered", "failed"];
 exports.statusCallback = firebase_functions_1.handler.https.onRequest(async (req, res) => {
     (0, utils_1.initialize)();
     const { twilio: { authToken }, } = config_1.default;
@@ -52,12 +53,18 @@ exports.statusCallback = firebase_functions_1.handler.https.onRequest(async (req
             firebase_functions_1.logger.error(`Could not find document for message with SID: ${MessageSid}`);
         }
         else {
-            const ref = query.docs[0].ref;
-            firebase_functions_1.logger.log(`Found document for message ${MessageSid} with ref ${String(ref.path)}`);
-            await (0, firebase_admin_1.firestore)().runTransaction((transaction) => {
-                transaction.update(ref, "delivery.info.status", MessageStatus);
-                return Promise.resolve();
-            });
+            const doc = query.docs[0];
+            firebase_functions_1.logger.log(`Found document for message ${MessageSid} with ref ${String(doc.ref.path)}`);
+            const currentStatus = doc.get("delivery.info.status");
+            if (terminalStatuses.includes(currentStatus)) {
+                firebase_functions_1.logger.log(`Message ${MessageSid} with ref ${String(doc.ref.path)} already has terminal status of ${String(currentStatus)}; skipping update.`);
+            }
+            else {
+                await (0, firebase_admin_1.firestore)().runTransaction((transaction) => {
+                    transaction.update(doc.ref, "delivery.info.status", MessageStatus);
+                    return Promise.resolve();
+                });
+            }
         }
     }
     catch (error) {

@@ -4,6 +4,8 @@ import { twiml, validateRequest } from "twilio";
 import { initialize, getFunctionsUrl } from "./utils";
 import config from "./config";
 
+const terminalStatuses = ["delivered", "undelivered", "failed"];
+
 export const statusCallback = handler.https.onRequest(async (req, res) => {
   initialize();
   const {
@@ -57,14 +59,27 @@ export const statusCallback = handler.https.onRequest(async (req, res) => {
         `Could not find document for message with SID: ${MessageSid}`
       );
     } else {
-      const ref = query.docs[0].ref;
+      const doc = query.docs[0];
       logger.log(
-        `Found document for message ${MessageSid} with ref ${String(ref.path)}`
+        `Found document for message ${MessageSid} with ref ${String(
+          doc.ref.path
+        )}`
       );
-      await adminFirestore().runTransaction((transaction) => {
-        transaction.update(ref, "delivery.info.status", MessageStatus);
-        return Promise.resolve();
-      });
+      const currentStatus = doc.get("delivery.info.status");
+      if (terminalStatuses.includes(currentStatus)) {
+        logger.log(
+          `Message ${MessageSid} with ref ${String(
+            doc.ref.path
+          )} already has terminal status of ${String(
+            currentStatus
+          )}; skipping update.`
+        );
+      } else {
+        await adminFirestore().runTransaction((transaction) => {
+          transaction.update(doc.ref, "delivery.info.status", MessageStatus);
+          return Promise.resolve();
+        });
+      }
     }
   } catch (error) {
     logger.error(error);
