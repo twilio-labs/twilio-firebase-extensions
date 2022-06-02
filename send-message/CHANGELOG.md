@@ -1,3 +1,7 @@
+## Version 0.2.1
+
+fixed - loading of initializeApp from firebase-admin
+
 ## Version 0.2.0
 
 fixed - handles out of order status callback webhooks
