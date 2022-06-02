@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase-admin";
+import { initializeApp } from "firebase-admin/app";
 import { Twilio } from "twilio";
 
 import { APP_VERSION } from "./version";

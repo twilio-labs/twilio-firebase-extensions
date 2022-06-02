@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialize = exports.sendgridClient = void 0;
-const firebase_admin_1 = require("firebase-admin");
+const app_1 = require("firebase-admin/app");
 const config_1 = __importDefault(require("./config"));
 const client_1 = require("@sendgrid/client");
 const mail_1 = require("@sendgrid/mail");
@@ -15,7 +15,7 @@ function initialize() {
         return;
     }
     if (config_1.default.sendgrid.apiKey) {
-        (0, firebase_admin_1.initializeApp)();
+        (0, app_1.initializeApp)();
         const httpClient = new client_1.Client();
         // @ts-ignore The client has a defaultHeaders property, it just isn't exposed in the types
         const oldUserAgent = httpClient.defaultHeaders["User-Agent"];

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFunctionsUrl = exports.initialize = exports.twilioClient = void 0;
-const firebase_admin_1 = require("firebase-admin");
+const app_1 = require("firebase-admin/app");
 const twilio_1 = require("twilio");
 const version_1 = require("./version");
 const config_1 = __importDefault(require("./config"));
@@ -14,7 +14,7 @@ function initialize() {
         return;
     }
     if (config_1.default.twilio.accountSid && config_1.default.twilio.authToken) {
-        (0, firebase_admin_1.initializeApp)();
+        (0, app_1.initializeApp)();
         exports.twilioClient = new twilio_1.Twilio(config_1.default.twilio.accountSid, config_1.default.twilio.authToken, {
             lazyLoading: true,
             userAgentExtensions: [

@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase-admin";
+import { initializeApp } from "firebase-admin/app";
 import config from "./config";
 import { Client as SendGridClient } from "@sendgrid/client";
 import { APP_VERSION } from "./version";
