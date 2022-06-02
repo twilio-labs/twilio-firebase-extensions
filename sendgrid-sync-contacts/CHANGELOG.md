@@ -1,3 +1,7 @@
+## Version 0.1.2
+
+updated - dependencies
+
 ## Version 0.1.1
 
 fixed - removed validation of API Key in extension.yml
