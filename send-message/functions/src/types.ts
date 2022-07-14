@@ -1,4 +1,5 @@
 export type MessageStatus =
+  | "scheduled"
   | "accepted"
   | "queued"
   | "sending"
@@ -33,4 +34,8 @@ export type QueuePayload = {
   from: string;
   body: string;
   mediaUrl?: string[];
+  scheduleType?: "fixed";
+  sendAt?: FirebaseFirestore.Timestamp;
+  smartEncoded?: boolean;
+  maxPrice?: number;
 };
