@@ -41,6 +41,20 @@ resources:
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:MESSAGE_COLLECTION}/{id}
+  - name: onsend
+    type: firebaseextensions.v1beta.v2function
+    description:
+      Listens for events emitted from your application or other extensions, you granted permission to emit this event, and sends the provided message.
+    properties:
+      location: ${param:LOCATION}
+      buildConfig:
+        runtime: nodejs14
+      serviceConfig:
+        availableMemory: 512M
+        timeoutSeconds: 60
+      eventTrigger:
+        eventType: firebase.extensions.twilio.send.sms
+        channel: projects/${param:PROJECT_ID}/locations/${param:LOCATION}/channels/firebase
   - name: statusCallback
     type: firebaseextensions.v1beta.function
     description: >-
