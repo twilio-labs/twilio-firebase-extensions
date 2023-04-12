@@ -25,6 +25,12 @@ externalServices:
   - name: Twilio
     PricingUri: https://www.twilio.com/pricing
 
+apis:
+  - apiName: eventarc.googleapis.com
+    reason: Powers all events and triggers
+  - apiName: run.googleapis.com
+    reason: Powers v2 functions
+
 roles:
   - role: datastore.user
     reason: Allows this extension to access Cloud Firestore to read and process added message documents.
