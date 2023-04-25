@@ -1,4 +1,8 @@
+## Version 0.3.1
+
+update - add intructions for custom events trigger in preinstall guide
 ## Version 0.3.0
+
 update - publishing an event to a channel using `"firebase.extensions.twilio.send.sms"` as the `type` triggers this extension
 ## Version 0.2.1
 
