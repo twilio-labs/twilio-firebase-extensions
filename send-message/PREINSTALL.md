@@ -1,4 +1,4 @@
-Use this extension to send messages (SMS or WhatsApp) using the [Twilio Programmable Messaging API](https://www.twilio.com/docs/messaging) based on information from documents added to a specified Cloud Firestore collection. The extension will also record the delivery status of each message.
+Use this extension to send messages (SMS or WhatsApp) using the [Twilio Programmable Messaging API](https://www.twilio.com/docs/messaging) through custom events or based on information from documents added to a specified Cloud Firestore collection. The extension will also record the delivery status of each message.
 
 Adding a document triggers this extension to send a message built from the document's fields. The document's fields specify who to send the message to and the body of the message and can optionally define the number to send the message from.
 
