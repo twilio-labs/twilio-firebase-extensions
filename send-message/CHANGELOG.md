@@ -1,3 +1,5 @@
+## Version 0.3.0
+update - publishing an event to a channel using `"firebase.extensions.twilio.send.sms"` as the `type` triggers this extension
 ## Version 0.2.1
 
 fixed - loading of initializeApp from firebase-admin
