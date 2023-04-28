@@ -1,3 +1,12 @@
+## Version 0.3.2
+
+fixed - moved tsconfig properties from root directory to functions directory to fix build crash
+## Version 0.3.1
+
+update - add intructions for custom events trigger in preinstall guide
+## Version 0.3.0
+
+update - publishing an event to a channel using `"firebase.extensions.twilio.send.sms"` as the `type` triggers this extension
 ## Version 0.2.1
 
 fixed - loading of initializeApp from firebase-admin

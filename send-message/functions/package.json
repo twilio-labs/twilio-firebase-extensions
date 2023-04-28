@@ -1,7 +1,7 @@
 {
   "name": "send-message",
-  "version": "0.2.1",
-  "description": "Send messages with the Twilio API by adding documents to a Firestore collection",
+  "version": "0.3.2",
+  "description": "Send messages with the Twilio API by publishing custom events or adding documents to a Firestore collection",
   "main": "lib/index.js",
   "scripts": {
     "prebuild": "node -p \"'export const APP_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
