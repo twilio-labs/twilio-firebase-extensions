@@ -2,12 +2,12 @@
 
 **Author**: Twilio (**[https://www.twilio.com](https://www.twilio.com)**)
 
-**Description**: Sends a message using the Twilio API based on Custom Events or the contents of a document written to a specified Cloud Firestore collection.
+**Description**: Sends a message using the Twilio API using Eventarc custom events or based on the contents of a document written to a specified Cloud Firestore collection.
 
 
 
-**Details**: Use this extension to send messages (SMS or WhatsApp) using the [Twilio Programmable Messaging API](https://www.twilio.com/docs/messaging) based on Custom Events or information from documents added to a specified Cloud Firestore collection. The extension will also record the delivery status of each message.
-
+**Details**: Use this extension to send messages (SMS or WhatsApp) using the [Twilio Programmable Messaging API](https://www.twilio.com/docs/messaging) using custom events or based on information from documents added to a specified Cloud Firestore collection. The extension will also record the delivery status of each message.
+#### Method 1: Add a document to a Cloud Firestore Collection
 Adding a document triggers this extension to send a message built from the document's fields. The document's fields specify who to send the message to and the body of the message and can optionally define the number to send the message from.
 
 Here's an example document that would trigger this extension:
@@ -17,6 +17,20 @@ admin.firestore().collection('messages').add({
   to: '+15551234567',
   body: 'Hello from Firebase!'
 });
+```
+#### Method 2: Publishing an Eventarc custom event
+
+Publishing an event to a channel using `"firebase.extensions.twilio.send.sms"` as the `type` triggers this extension to send a message built with the given data.
+
+Here's an example of how to publish this custom event:
+```js
+  getEventarc().channel().publish({
+    type: "firebase.extensions.twilio.send.sms",
+    data: {
+      to: '+15551234567',
+      body: 'Hello from Firebase!'
+    },
+  });
 ```
 
 #### Required fields
