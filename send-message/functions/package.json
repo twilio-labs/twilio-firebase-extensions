@@ -23,7 +23,7 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "firebase-admin": "^10.0.2",
+    "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.16.0",
     "twilio": "^3.73.0"
   },
