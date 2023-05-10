@@ -25,7 +25,8 @@
   "dependencies": {
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.16.0",
-    "twilio": "^3.73.0"
+    "twilio": "^3.73.0",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.28.2",
