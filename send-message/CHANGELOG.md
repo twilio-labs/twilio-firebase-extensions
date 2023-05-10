@@ -1,3 +1,6 @@
+## Version 0.3.3
+
+update - bump version to deploy verified build
 ## Version 0.3.2
 
 fixed - moved tsconfig properties from root directory to functions directory to fix build crash
