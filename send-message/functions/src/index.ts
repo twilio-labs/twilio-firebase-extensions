@@ -2,4 +2,3 @@
 
 export { statusCallback } from "./statusCallback";
 export { processQueue } from "./processQueue";
-export { onsend } from "./eventsHandler";
