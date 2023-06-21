@@ -27,7 +27,7 @@
   "dependencies": {
     "@sendgrid/client": "^7.6.0",
     "@sendgrid/mail": "^7.6.0",
-    "firebase-admin": "^10.0.2",
+    "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.16.0",
     "lodash.isequal": "^4.5.0"
   },
