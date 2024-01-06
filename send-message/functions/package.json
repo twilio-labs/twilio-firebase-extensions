@@ -26,7 +26,7 @@
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.16.0",
     "rimraf": "5.0.0",
-    "twilio": "^3.73.0",
+    "twilio": "^4.19.3",
     "typescript": "5.0.4"
   },
   "devDependencies": {
