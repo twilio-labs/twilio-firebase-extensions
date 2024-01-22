@@ -28,7 +28,7 @@ async function deliverMessage(payload, ref) {
             to,
             body,
             mediaUrl,
-            statusCallback: (0, utils_1.getFunctionsUrl)("statusCallback"),
+            statusCallback: (0, utils_1.getFunctionsUrl)(`ext-${process.env.EXT_INSTANCE_ID}-statusCallback`),
         });
         const info = {
             messageSid: message.sid,
