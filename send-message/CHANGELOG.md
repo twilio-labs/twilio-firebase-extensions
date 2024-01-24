@@ -1,3 +1,8 @@
+## Version 0.3.0
+
+fixed - updated message status on message document
+update - upgraded Cloud Functions runtime to Node.js 18
+
 ## Version 0.2.1
 
 fixed - loading of initializeApp from firebase-admin
