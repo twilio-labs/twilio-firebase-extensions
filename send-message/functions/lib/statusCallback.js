@@ -14,7 +14,7 @@ exports.statusCallback = firebase_functions_1.handler.https.onRequest(async (req
     (0, utils_1.initialize)();
     const { twilio: { authToken }, } = config_1.default;
     const signature = req.get("x-twilio-signature");
-    const url = (0, utils_1.getFunctionsUrl)("statusCallback");
+    const url = (0, utils_1.getFunctionsUrl)(`ext-${process.env.EXT_INSTANCE_ID}-statusCallback`);
     const params = req.body;
     if (!signature) {
         return res

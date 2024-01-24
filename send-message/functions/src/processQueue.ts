@@ -34,7 +34,7 @@ async function deliverMessage(
       to,
       body,
       mediaUrl,
-      statusCallback: getFunctionsUrl("statusCallback"),
+      statusCallback: getFunctionsUrl(`ext-${process.env.EXT_INSTANCE_ID}-statusCallback`),
     });
     const info = {
       messageSid: message.sid,

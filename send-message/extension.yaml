@@ -37,7 +37,7 @@ resources:
       delivers messages, and updates the document with delivery status information.
     properties:
       location: ${param:LOCATION}
-      runtime: nodejs14
+      runtime: nodejs18
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:MESSAGE_COLLECTION}/{id}
@@ -48,7 +48,7 @@ resources:
       Twilio and updates the delivery status of a message document.
     properties:
       location: ${param:LOCATION}
-      runtime: nodejs14
+      runtime: nodejs18
       httpsTrigger: {}
 
 params:

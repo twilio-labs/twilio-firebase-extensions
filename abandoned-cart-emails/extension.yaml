@@ -1,5 +1,5 @@
 name: abandoned-cart-emails
-version: 0.1.2
+version: 0.1.3
 specVersion: v1beta
 
 displayName: Send Abandoned Cart Reminders with SendGrid
@@ -40,7 +40,7 @@ resources:
       delivers emails, and updates the document with delivery status information.
     properties:
       location: ${param:LOCATION}
-      runtime: nodejs14
+      runtime: nodejs18
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:EMAIL_COLLECTION}/{id}
@@ -52,7 +52,7 @@ resources:
       field that can be used to determine whether the cart has been abandoned.
     properties:
       location: ${param:LOCATION}
-      runtime: nodejs14
+      runtime: nodejs18
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:CART_COLLECTION}/{id}
@@ -64,7 +64,7 @@ resources:
       email can be sent out.
     properties:
       location: ${param:LOCATION}
-      runtime: nodejs14
+      runtime: nodejs18
       scheduleTrigger:
         schedule: ${param:CART_CHECK_INTERVAL}
 

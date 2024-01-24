@@ -1,5 +1,5 @@
 name: sendgrid-sync-contacts
-version: 0.1.2
+version: 0.1.3
 specVersion: v1beta
 
 displayName: Sync Contacts with SendGrid
@@ -37,7 +37,7 @@ resources:
       adds contact data to the contacts list in your SendGrid Marketing Campaign
     properties:
       location: ${param:LOCATION}
-      runtime: nodejs14
+      runtime: nodejs18
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:CONTACTS_COLLECTION}/{id}

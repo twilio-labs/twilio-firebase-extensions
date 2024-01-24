@@ -12,7 +12,7 @@ export const statusCallback = handler.https.onRequest(async (req, res) => {
     twilio: { authToken },
   } = config;
   const signature = req.get("x-twilio-signature");
-  const url = getFunctionsUrl("statusCallback");
+  const url = getFunctionsUrl(`ext-${process.env.EXT_INSTANCE_ID}-statusCallback`);
   const params = req.body;
   if (!signature) {
     return res
