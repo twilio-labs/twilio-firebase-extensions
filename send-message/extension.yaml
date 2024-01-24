@@ -1,5 +1,5 @@
 name: send-message
-version: 0.2.1
+version: 0.3.4
 specVersion: v1beta
 
 displayName: Send Messages with Twilio
