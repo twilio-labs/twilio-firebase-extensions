@@ -31,10 +31,10 @@
     "firebase-functions": "^3.16.0",
     "lodash.isequal": "^4.5.0",
     "rimraf": "5.0.0",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "@types/lodash.isequal": "^4.5.5"
   },
   "devDependencies": {
-    "@types/lodash.isequal": "^4.5.5",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
     "eslint": "^7.30.0",
