@@ -48,7 +48,7 @@ export async function getContactId(email: string) {
     const response = await sendGridClient.request(request);
     const clientResponse = response[0] as Response<EmailResults>;
     const result = clientResponse.body.result[email];
-    if (hasOwnProperty(result, "contact")) {
+    if (hasOwnProperty(result, "contact") && typeof result.contact === "object" && result.contact && hasOwnProperty(result.contact, "id") && typeof result.contact.id === "string") {
       return result.contact.id;
     } else {
       return null;
