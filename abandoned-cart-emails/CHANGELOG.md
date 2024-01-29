@@ -1,4 +1,4 @@
-## Version 0.1.3
+## Version 0.1.4
 
 updated - upgraded Cloud Functions runtime to Node.js 18
 
