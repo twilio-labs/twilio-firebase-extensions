@@ -20,10 +20,11 @@ admin.firestore().collection('messages').add({
 
 #### Optional fields
 
-| Field       | Description                                                                                                                                                                                                         |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `from`      | A Twilio phone number or [Messaging Service](https://www.twilio.com/docs/messaging/services) you want to use to send the message. Overrides the from number or Messaging Service set in the extension settings      |
-| `mediaUrls` | An array of URLs of media to send with the message. Only supported in US and Canada. See the [Create a Message docs](https://www.twilio.com/docs/sms/api/message-resource#create-a-message-resource) for more info. |
+| Field         | Description                                                                                                                                                                                                                                                                                                            |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `from`        | A Twilio phone number or [Messaging Service](https://www.twilio.com/docs/messaging/services) you want to use to send the message. Overrides the from number or Messaging Service set in the extension settings                                                                                                         |
+| `mediaUrl`    | An array of URLs of media to send with the message. Only supported in US and Canada. See the [Create a Message docs](https://www.twilio.com/docs/sms/api/message-resource#create-a-message-resource) for more info.                                                                                                    |
+| `shortenUrls` | For Messaging Services with [Link Shortening](https://www.twilio.com/docs/messaging/features/link-shortening) configured only: A Boolean indicating whether or not Twilio should shorten links in the body of the Message. Default value is false. If true, the Messaging Service must be set in the extension. |
 
 #### Additional setup
 
