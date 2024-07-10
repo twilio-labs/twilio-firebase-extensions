@@ -1,13 +1,14 @@
 import { firestore as adminFirestore } from "firebase-admin";
 import {
-  logger,
   Change,
-  handler,
   firestore as functionsFirestore,
+  handler,
+  logger,
 } from "firebase-functions";
-import { QueuePayload } from "./types";
+import { MessageListInstanceCreateOptions } from "twilio/lib/rest/api/v2010/account/message";
 import config from "./config";
-import { initialize, twilioClient, getFunctionsUrl } from "./utils";
+import { QueuePayload } from "./types";
+import { getFunctionsUrl, initialize, twilioClient } from "./utils";
 
 async function deliverMessage(
   payload: QueuePayload,
@@ -28,14 +29,20 @@ async function deliverMessage(
       payload.from ||
       config.twilio.messagingServiceSid ||
       config.twilio.phoneNumber;
-    const { to, body, mediaUrl } = payload;
-    const message = await twilioClient.messages.create({
+    const { to, body, mediaUrl, shortenUrls } = payload;
+    const messageParams: MessageListInstanceCreateOptions = {
       from,
       to,
       body,
       mediaUrl,
-      statusCallback: getFunctionsUrl(`ext-${process.env.EXT_INSTANCE_ID}-statusCallback`),
-    });
+      statusCallback: getFunctionsUrl(
+        `ext-${process.env.EXT_INSTANCE_ID}-statusCallback`
+      ),
+    };
+    if (config.twilio.messagingServiceSid) {
+      messageParams.shortenUrls = shortenUrls;
+    }
+    const message = await twilioClient.messages.create(messageParams);
     const info = {
       messageSid: message.sid,
       status: message.status,

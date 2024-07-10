@@ -33,4 +33,5 @@ export type QueuePayload = {
   from: string;
   body: string;
   mediaUrl?: string[];
+  shortenUrls?: boolean;
 };
