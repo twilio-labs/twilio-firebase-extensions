@@ -22,14 +22,18 @@ async function deliverMessage(payload, ref) {
         const from = payload.from ||
             config_1.default.twilio.messagingServiceSid ||
             config_1.default.twilio.phoneNumber;
-        const { to, body, mediaUrl } = payload;
-        const message = await utils_1.twilioClient.messages.create({
+        const { to, body, mediaUrl, shortenUrls } = payload;
+        const messageParams = {
             from,
             to,
             body,
             mediaUrl,
             statusCallback: (0, utils_1.getFunctionsUrl)(`ext-${process.env.EXT_INSTANCE_ID}-statusCallback`),
-        });
+        };
+        if (config_1.default.twilio.messagingServiceSid) {
+            messageParams.shortenUrls = shortenUrls;
+        }
+        const message = await utils_1.twilioClient.messages.create(messageParams);
         const info = {
             messageSid: message.sid,
             status: message.status,
