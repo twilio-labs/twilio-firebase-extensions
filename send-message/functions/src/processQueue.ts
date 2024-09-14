@@ -1,14 +1,14 @@
 import { firestore as adminFirestore } from "firebase-admin";
-import {
-  Change,
-  firestore as functionsFirestore,
-  handler,
-  logger,
-} from "firebase-functions";
 import { MessageListInstanceCreateOptions } from "twilio/lib/rest/api/v2010/account/message";
-import config from "./config";
+import {
+  logger,
+  Change,
+  handler,
+  firestore as functionsFirestore,
+} from "firebase-functions";
 import { QueuePayload } from "./types";
-import { getFunctionsUrl, initialize, twilioClient } from "./utils";
+import config from "./config";
+import { initialize, twilioClient, getFunctionsUrl } from "./utils";
 
 async function deliverMessage(
   payload: QueuePayload,
@@ -35,9 +35,7 @@ async function deliverMessage(
       to,
       body,
       mediaUrl,
-      statusCallback: getFunctionsUrl(
-        `ext-${process.env.EXT_INSTANCE_ID}-statusCallback`
-      ),
+      statusCallback: getFunctionsUrl(`ext-${process.env.EXT_INSTANCE_ID}-statusCallback`),
     };
     if (config.twilio.messagingServiceSid) {
       messageParams.shortenUrls = shortenUrls;
