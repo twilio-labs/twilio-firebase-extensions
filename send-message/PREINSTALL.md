@@ -5,9 +5,9 @@ Adding a document triggers this extension to send a message built from the docum
 Here's an example document that would trigger this extension:
 
 ```js
-admin.firestore().collection('messages').add({
-  to: '+15551234567',
-  body: 'Hello from Firebase!'
+admin.firestore().collection("messages").add({
+  to: "+15551234567",
+  body: "Hello from Firebase!",
 });
 ```
 
@@ -20,30 +20,31 @@ admin.firestore().collection('messages').add({
 
 #### Optional fields
 
-| Field         | Description                                                                                                                                                                                                                                                                                                            |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `from`        | A Twilio phone number or [Messaging Service](https://www.twilio.com/docs/messaging/services) you want to use to send the message. Overrides the from number or Messaging Service set in the extension settings                                                                                                         |
-| `mediaUrl`    | An array of URLs of media to send with the message. Only supported in US and Canada. See the [Create a Message docs](https://www.twilio.com/docs/sms/api/message-resource#create-a-message-resource) for more info.                                                                                                    |
+| Field         | Description                                                                                                                                                                                                                                                                                                     |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `from`        | A Twilio phone number or [Messaging Service](https://www.twilio.com/docs/messaging/services) you want to use to send the message. Overrides the from number or Messaging Service set in the extension settings                                                                                                  |
+| `mediaUrl`    | An array of URLs of media to send with the message. Only supported in US and Canada. See the [Create a Message docs](https://www.twilio.com/docs/sms/api/message-resource#create-a-message-resource) for more info.                                                                                             |
 | `shortenUrls` | For Messaging Services with [Link Shortening](https://www.twilio.com/docs/messaging/features/link-shortening) configured only: A Boolean indicating whether or not Twilio should shorten links in the body of the Message. Default value is false. If true, the Messaging Service must be set in the extension. |
 
 #### Additional setup
 
 Before installing this extension, make sure:
 
-* You have [set up a Cloud Firestore database](https://firebase.google.com/docs/firestore/quickstart) in your Firebase project
-* You have [signed up for a Twilio account](https://www.twilio.com/try-twilio)
+- You have [set up a Cloud Firestore database](https://firebase.google.com/docs/firestore/quickstart) in your Firebase project
+- You have [signed up for a Twilio account](https://www.twilio.com/try-twilio)
 
 ##### Sending SMS
 
-* You will need a [Twilio phone number](https://www.twilio.com/docs/phone-numbers) that is capable of sending SMS messages
-* If you are using a trial account you will only be able to send messages to a number that you have [verified with Twilio](https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account#verify-your-personal-phone-number)
+- You will need a [Twilio phone number](https://www.twilio.com/docs/phone-numbers) that is capable of sending SMS messages
+- If you are using a trial account you will only be able to send messages to a number that you have [verified with Twilio](https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account#verify-your-personal-phone-number)
 
 ##### Sending WhatsApp messages
 
-* You can test with the number provided in the [Twilio Sandbox for WhatsApp](https://www.twilio.com/docs/whatsapp/sandbox)
-* To send WhatsApp messages in production you will need to [connect a Twilio number to a WhatsApp Business Profile](https://www.twilio.com/docs/whatsapp/tutorial/connect-number-business-profile)
+- You can test with the number provided in the [Twilio Sandbox for WhatsApp](https://www.twilio.com/docs/whatsapp/sandbox)
+- To send WhatsApp messages in production you will need to [connect a Twilio number to a WhatsApp Business Profile](https://www.twilio.com/docs/whatsapp/tutorial/connect-number-business-profile)
 
 #### Billing
+
 To install an extension, your project must be on the [Blaze (pay as you go) plan](https://firebase.google.com/pricing)
 
 - You will be charged a small amount (typically around $0.01/month) for the Firebase resources required by this extension (even if it is not used).
