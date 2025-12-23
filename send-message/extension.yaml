@@ -1,5 +1,5 @@
 name: send-message
-version: 0.3.4
+version: 0.3.5
 specVersion: v1beta
 
 displayName: Send Messages with Twilio
@@ -37,7 +37,7 @@ resources:
       delivers messages, and updates the document with delivery status information.
     properties:
       location: ${param:LOCATION}
-      runtime: nodejs18
+      runtime: nodejs20
       eventTrigger:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:MESSAGE_COLLECTION}/{id}
@@ -48,7 +48,7 @@ resources:
       Twilio and updates the delivery status of a message document.
     properties:
       location: ${param:LOCATION}
-      runtime: nodejs18
+      runtime: nodejs20
       httpsTrigger: {}
 
 params:

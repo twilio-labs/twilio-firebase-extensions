@@ -1,3 +1,7 @@
+## Version 0.3.5
+
+update - upgraded Cloud Functions runtime to Node.js 20
+
 ## Version 0.3.4
 
 fixed - updated message status on message document

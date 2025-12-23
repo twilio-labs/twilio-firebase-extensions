@@ -1,21 +1,18 @@
-import { firestore as adminFirestore } from "firebase-admin";
-import {
-  logger,
-  Change,
-  handler,
-  firestore as functionsFirestore,
-} from "firebase-functions";
+import * as admin from "firebase-admin";
+import { FieldValue, Timestamp } from "firebase-admin/firestore"; // <--- THE FIX
+import * as functions from "firebase-functions/v1";
 import { QueuePayload } from "./types";
 import config from "./config";
 import { initialize, twilioClient, getFunctionsUrl } from "./utils";
 
 async function deliverMessage(
   payload: QueuePayload,
-  ref: adminFirestore.DocumentReference
+  ref: admin.firestore.DocumentReference
 ): Promise<void> {
-  logger.log(`Attempting delivery for message: ${String(ref.path)}`);
+  functions.logger.log(`Attempting delivery for message: ${String(ref.path)}`);
+
   const update = {
-    "delivery.endTime": adminFirestore.FieldValue.serverTimestamp(),
+    "delivery.endTime": FieldValue.serverTimestamp(),
     "delivery.leaseExpireTime": null,
     "delivery.state": "SUCCESS",
     "delivery.info": {},
@@ -28,63 +25,74 @@ async function deliverMessage(
       payload.from ||
       config.twilio.messagingServiceSid ||
       config.twilio.phoneNumber;
+
     const { to, body, mediaUrl } = payload;
+
     const message = await twilioClient.messages.create({
       from,
       to,
       body,
       mediaUrl,
-      statusCallback: getFunctionsUrl(`ext-${process.env.EXT_INSTANCE_ID}-statusCallback`),
+      statusCallback: getFunctionsUrl(
+        `ext-${process.env.EXT_INSTANCE_ID}-statusCallback`
+      ),
     });
+
     const info = {
       messageSid: message.sid,
       status: message.status,
       dateCreated: message.dateCreated
-        ? adminFirestore.Timestamp.fromDate(message.dateCreated)
+        ? Timestamp.fromDate(message.dateCreated)
         : null,
-      dateSent: message.dateSent
-        ? adminFirestore.Timestamp.fromDate(message.dateSent)
-        : null,
+      dateSent: message.dateSent ? Timestamp.fromDate(message.dateSent) : null,
       dateUpdated: message.dateUpdated
-        ? adminFirestore.Timestamp.fromDate(message.dateUpdated)
+        ? Timestamp.fromDate(message.dateUpdated)
         : null,
       messagingServiceSid: message.messagingServiceSid,
       numMedia: message.numMedia,
       numSegments: message.numSegments,
     };
+
     update["delivery.state"] = "SUCCESS";
     update["delivery.info"] = info;
-    logger.log(
+
+    functions.logger.log(
       `Delivered message: ${String(
         ref.path
       )} successfully. MessageSid: ${String(info.messageSid)}`
     );
   } catch (error: any) {
     update["delivery.state"] = "ERROR";
-    update["delivery.errorCode"] = error.code.toString();
-    update["delivery.errorMessage"] = `${error.message} ${error.moreInfo}`;
-    logger.error(
+    update["delivery.errorCode"] = error.code
+      ? error.code.toString()
+      : "unknown";
+    update["delivery.errorMessage"] = `${error.message || ""} ${
+      error.moreInfo || ""
+    }`;
+
+    functions.logger.error(
       `Error when delivering message: ${String(ref.path)}: ${String(error)}`
     );
   }
 
-  return adminFirestore().runTransaction((transaction) => {
+  return admin.firestore().runTransaction((transaction) => {
     transaction.update(ref, update);
     return Promise.resolve();
   });
 }
 
 function processCreate(
-  snapshot: adminFirestore.DocumentSnapshot<adminFirestore.DocumentData>
+  snapshot: admin.firestore.DocumentSnapshot<admin.firestore.DocumentData>
 ) {
   // In a transaction, store a delivery object that logs the time it was
   // updated, the initial state (PENDING), and empty properties for info about
   // the message or error codes and messages.
-  return adminFirestore().runTransaction(
-    (transaction: adminFirestore.Transaction) => {
+  return admin
+    .firestore()
+    .runTransaction((transaction: admin.firestore.Transaction) => {
       transaction.update(snapshot.ref, {
         delivery: {
-          startTime: adminFirestore.FieldValue.serverTimestamp(),
+          startTime: FieldValue.serverTimestamp(),
           state: "PENDING",
           errorCode: null,
           errorMessage: null,
@@ -92,14 +100,13 @@ function processCreate(
         },
       });
       return Promise.resolve();
-    }
-  );
+    });
 }
 
 // This method is called by `processQueue` when a document is added to the
 // collection, updated, or deleted.
 async function processWrite(
-  change: Change<functionsFirestore.DocumentSnapshot>
+  change: functions.Change<functions.firestore.DocumentSnapshot>
 ): Promise<void> {
   if (!change.after.exists) {
     // Document has been deleted, nothing to do here.
@@ -108,7 +115,7 @@ async function processWrite(
 
   if (!change.before.exists && change.after.exists) {
     // Document has been created, initialize the delivery state
-    return processCreate(change.after);
+    return processCreate(change.after as admin.firestore.DocumentSnapshot);
   }
 
   // The document has been updated, so we fetch the data in the document to
@@ -118,7 +125,7 @@ async function processWrite(
   if (!payload.delivery) {
     // Document does not have a delivery object so something has gone wrong.
     // Log and exit.
-    logger.error(
+    functions.logger.error(
       `message=${String(change.after.ref.path)} is missing 'delivery' field`
     );
     return;
@@ -129,47 +136,62 @@ async function processWrite(
     case "ERROR":
       // Processing complete, nothing more to do.
       return;
+
     case "PROCESSING":
       if (
         payload.delivery.leaseExpireTime &&
         payload.delivery.leaseExpireTime.toMillis() < Date.now()
       ) {
         // It has taken too long to process the message, mark it as an error.
-        return adminFirestore().runTransaction((transaction) => {
-          transaction.update(change.after.ref, {
-            "delivery.state": "ERROR",
-            errorMessage: "Message processing lease expired.",
-          });
+        return admin.firestore().runTransaction((transaction) => {
+          transaction.update(
+            change.after.ref as admin.firestore.DocumentReference,
+            {
+              "delivery.state": "ERROR",
+              errorMessage: "Message processing lease expired.",
+            }
+          );
           return Promise.resolve();
         });
       }
       return;
+
     case "PENDING":
       // Update the message to the processing state and give it 60 seconds to
       // run. Then call the deliver function.
-      await adminFirestore().runTransaction((transaction) => {
-        transaction.update(change.after.ref, {
-          "delivery.state": "PROCESSING",
-          "delivery.leaseExpireTime": adminFirestore.Timestamp.fromMillis(
-            Date.now() + 60000
-          ),
-        });
+      await admin.firestore().runTransaction((transaction) => {
+        transaction.update(
+          change.after.ref as admin.firestore.DocumentReference,
+          {
+            "delivery.state": "PROCESSING",
+            "delivery.leaseExpireTime": Timestamp.fromMillis(
+              Date.now() + 60000
+            ),
+          }
+        );
         return Promise.resolve();
       });
-      return deliverMessage(payload, change.after.ref);
+      return deliverMessage(
+        payload,
+        change.after.ref as admin.firestore.DocumentReference
+      );
   }
 }
 
-export const processQueue = handler.firestore.document.onWrite(
-  async (change: Change<functionsFirestore.DocumentSnapshot>) => {
-    // Initialize Firebase and Twilio clients
-    initialize();
-    try {
-      await processWrite(change);
-    } catch (error) {
-      logger.error(error);
-      return;
+export const processQueue = functions.firestore
+  .document(`${config.messageCollection}/{id}`)
+  .onWrite(
+    async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
+      // Initialize Firebase and Twilio clients
+      initialize();
+      try {
+        await processWrite(change);
+      } catch (error) {
+        functions.logger.error(error);
+        return;
+      }
+      functions.logger.log(
+        "Completed execution of Twilio send message extension."
+      );
     }
-    logger.log("Completed execution of Twilio send message extension.");
-  }
-);
+  );
